@@ -3,3 +3,8 @@ Desktop.ini
 .DS_Store
 *.log
 *.tmp
+
+# Electron
+node_modules/
+dist/
+package-lock.json
