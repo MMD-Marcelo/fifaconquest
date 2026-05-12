@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFACONQUEST</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<select class="language-select setup-language-select" id="language-select-setup" onchange="setLanguage(this.value)" aria-label="Language">
+  <option value="pt">PT</option>
+</select>
+
+<!-- SETUP SCREEN -->
+<div id="setup-screen">
+  <div class="setup-logo-layer" aria-label="FIFACONQUEST">
+    <img class="logo-img setup-logo" src="LOGO-LETTER.SVG" alt="FIFACONQUEST">
+  </div>
+  <div class="setup-card">
+    <h3 data-i18n="players">Players</h3>
+    <div class="player-count-row">
+      <button class="count-btn" onclick="changePlayerCount(-1)">-</button>
+      <span class="count-label" id="count-display">3</span>
+      <button class="count-btn" onclick="changePlayerCount(1)">+</button>
+    </div>
+    <div class="players-config" id="players-config"></div>
+    <div class="seed-row">
+      <span class="seed-label" data-i18n="random_seed">Seed aleatoria</span>
+      <input type="text" class="seed-input" id="seed-input" placeholder="ex: fifa2026">
+    </div>
+    <div class="team-mode-row">
+      <span class="seed-label" data-i18n="teams">Times</span>
+      <div class="team-mode-toggle" aria-label="Modo de sorteio dos times">
+        <label class="team-mode-option">
+          <input type="radio" name="team-pool-mode" value="random" checked>
+          <span data-i18n="random">Aleatorio</span>
+        </label>
+        <label class="team-mode-option">
+          <input type="radio" name="team-pool-mode" value="elite">
+          <span data-i18n="elite_pool">Elite cativa</span>
+        </label>
+      </div>
+    </div>
+    <div class="team-mode-row">
+      <span class="seed-label" data-i18n="base">Base</span>
+      <div class="team-mode-toggle" aria-label="Modo dos times da base">
+        <label class="team-mode-option">
+          <input type="radio" name="base-team-mode" value="random" checked onchange="renderPlayerSetup()">
+          <span data-i18n="random">Aleatorio</span>
+        </label>
+        <label class="team-mode-option">
+          <input type="radio" name="base-team-mode" value="manual" onchange="renderPlayerSetup()">
+          <span data-i18n="choose">Escolher</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="challenge-card">
+    <div class="challenge-head">
+      <div>
+        <div class="challenge-kicker" data-i18n="challenges">Desafios</div>
+        <div class="challenge-title" data-i18n="optional_cards">Cartas opcionais</div>
+      </div>
+      <div class="challenge-actions">
+        <button class="btn-mini" onclick="drawChallenges()" data-i18n="draw">Sortear</button>
+        <button class="btn-mini" onclick="clearChallenges()" data-i18n="clear">Limpar</button>
+      </div>
+    </div>
+    <div class="challenge-grid" id="challenge-grid">
+      <div class="challenge-empty" data-i18n="challenge_empty">Sorteie os desafios opcionais quando quiser.</div>
+    </div>
+  </div>
+  <div class="setup-actions">
+    <button class="btn-start" onclick="startGame()" data-i18n="start_tournament">INICIAR CAMPEONATO</button>
+    <button class="btn-continue" onclick="triggerSaveImport()" data-i18n="import_save">IMPORTAR SAVE</button>
+    <button class="btn-continue" id="btn-continue-game" onclick="continueSavedGame()" style="display:none;" data-i18n="continue_game">CONTINUAR PARTIDA</button>
+  </div>
+  <input type="file" id="save-import-input" accept="application/json,.json" onchange="importSaveFile(event)" hidden>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game-screen">
+  <div class="topbar">
+    <span class="topbar-title" aria-label="FIFACONQUEST">
+      <img class="logo-img topbar-logo" src="LOGO-LETTER.SVG" alt="FIFACONQUEST">
+    </span>
+    <div class="turn-info">
+      <div class="turn-dot" id="turn-dot"></div>
+      <div>
+        <div class="turn-name" id="turn-name">-</div>
+        <div class="turn-label" data-i18n="current_turn">Turno atual</div>
+      </div>
+    </div>
+    <div style="margin-left:16px;font-size:12px;color:var(--muted);font-family:Helvetica,Arial,sans-serif;letter-spacing:1px;" id="attack-chain-info"></div>
+    <div class="topbar-right">
+      <select class="language-select" id="language-select-game" onchange="setLanguage(this.value)" aria-label="Language">
+        <option value="pt">PT</option>
+      </select>
+      <button class="btn-sm" onclick="exportMatchSummary()" data-i18n="export">Exportar</button>
+      <button class="btn-sm" onclick="downloadSaveFile()" data-i18n="download_save">Baixar save</button>
+      <button class="btn-sm" onclick="newTournamentSetup()" data-i18n="new_game">Nova partida</button>
+    </div>
+  </div>
+  <div class="game-body">
+    <div id="map-container">
+      <!-- SVG world map will be injected here -->
+      <div class="map-actionbar">
+        <button class="btn-toggle-teams" id="btn-toggle-teams" onclick="toggleTeamLabels()" data-i18n="show_teams">Ver times</button>
+        <button class="btn-toggle-teams" onclick="mapZoom(1.25)">Zoom +</button>
+        <button class="btn-toggle-teams" onclick="mapZoom(0.8)">Zoom -</button>
+        <button class="btn-toggle-teams swap-reward-btn" id="btn-swap-reward" onclick="openSwapReward()" style="display:none;" data-i18n="swap">Troca</button>
+        <button class="btn-end-turn" id="map-end-turn" onclick="nextTurn()" data-i18n="end_turn">Passar turno &rarr;</button>
+      </div>
+      <div id="map-tooltip">
+        <div class="tt-country" id="tt-country"></div>
+        <div class="tt-team" id="tt-team"></div>
+        <div class="tt-owner" id="tt-owner"></div>
+      </div>
+      <div class="map-controls">
+        <button class="map-ctrl-btn" onclick="mapZoom(1.3)" title="Zoom in">+</button>
+        <button class="map-ctrl-btn" onclick="mapZoom(0.77)" title="Zoom out">-</button>
+        <button class="map-ctrl-btn" onclick="resetMapView()" title="Reset">0</button>
+      </div>
+    </div>
+    <div id="sidebar">
+      <div class="sidebar-tabs">
+        <button class="stab active" onclick="switchTab('players')" id="tab-players" data-i18n="players">Players</button>
+        <button class="stab" onclick="switchTab('teams')" id="tab-teams" data-i18n="teams">Times</button>
+        <button class="stab" onclick="switchTab('log')" id="tab-log" data-i18n="history">Historico</button>
+        <button class="stab" onclick="switchTab('stats')" id="tab-stats" data-i18n="stats">Stats</button>
+      </div>
+      <div class="sidebar-content tab-panel active" id="sidebar-players"></div>
+      <div class="sidebar-content tab-panel" id="sidebar-teams"></div>
+      <div class="sidebar-content tab-panel" id="sidebar-map"></div>
+      <div class="sidebar-content tab-panel" id="sidebar-log"></div>
+      <div class="sidebar-content tab-panel" id="sidebar-stats"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BATTLE MODAL -->
+<div id="battle-modal">
+  <div class="battle-card">
+    <div class="battle-title" data-i18n="battle">BATALHA</div>
+    <div class="battle-matchup">
+      <div class="battle-team">
+        <div class="battle-team-name" id="battle-attacker-team" style="color:var(--accent)"></div>
+        <div class="battle-team-country" id="battle-attacker-country"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" data-i18n="attacker">ATACANTE</div>
+      </div>
+      <div class="battle-vs">VS</div>
+      <div class="battle-team">
+        <div class="battle-team-name" id="battle-defender-team" style="color:var(--accent2)"></div>
+        <div class="battle-team-country" id="battle-defender-country"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" data-i18n="defender">DEFENSOR</div>
+      </div>
+    </div>
+    <div class="battle-context" id="battle-context"></div>
+    <div class="defender-team-select" id="defender-team-select"></div>
+    <div class="neutral-defender-select" id="neutral-defender-select"></div>
+    <div class="battle-score-row">
+      <div class="score-input-wrap">
+        <label data-i18n="attacker">Atacante</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" class="score-input" id="score-attacker" value="0" oninput="normalizeScoreInput(this)">
+      </div>
+      <span class="score-sep">x</span>
+      <div class="score-input-wrap">
+        <label data-i18n="defender">Defensor</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" class="score-input" id="score-defender" value="0" oninput="normalizeScoreInput(this)">
+      </div>
+    </div>
+    <div class="battle-result-btns">
+      <button class="btn-win" onclick="resolveBattle(true)" data-i18n="victory">VITORIA</button>
+      <button class="btn-draw" onclick="resolveBattle('draw')" data-i18n="draw_result">EMPATE</button>
+      <button class="btn-lose" onclick="resolveBattle(false)" data-i18n="defeat">DERROTA</button>
+    </div>
+  </div>
+</div>
+
+<!-- SWAP REWARD MODAL -->
+<div id="swap-modal">
+  <div class="swap-card">
+    <div class="swap-title" data-i18n="streak_bonus">BONUS DE SEQUENCIA</div>
+    <div class="swap-heading" data-i18n="swap_heading">Trocar times de lugar</div>
+    <div class="swap-copy" data-i18n="swap_copy">Voce venceu 3 batalhas seguidas neste turno. Escolha dois territorios seus para trocar os times entre eles.</div>
+    <div class="swap-options" id="swap-options"></div>
+    <div class="swap-actions">
+      <button class="btn-skip-swap" onclick="skipSwapReward()" data-i18n="not_now">Agora nao</button>
+      <button class="btn-confirm-swap" id="swap-confirm" onclick="confirmSwapReward()" disabled data-i18n="swap">Trocar</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div id="export-modal">
+  <div class="export-card">
+    <div class="swap-title" data-i18n="history">HISTORICO</div>
+    <div class="swap-heading" data-i18n="export_match">Exportar partida</div>
+    <textarea id="export-text" readonly></textarea>
+    <div class="swap-actions">
+      <button class="btn-skip-swap" onclick="closeExportModal()" data-i18n="close">Fechar</button>
+      <button class="btn-skip-swap" onclick="copyExportText()" data-i18n="copy">Copiar</button>
+      <button class="btn-confirm-swap" onclick="downloadExportText()" data-i18n="download_txt">Baixar .txt</button>
+    </div>
+  </div>
+</div>
+
+<!-- WINNER MODAL -->
+<div id="winner-modal">
+  <div class="winner-card">
+    <div class="winner-label" data-i18n="world_champion">CAMPEAO MUNDIAL</div>
+    <div class="winner-name" id="winner-name"></div>
+    <div class="winner-subtitle" data-i18n="winner_subtitle">Dominou todos os territorios principais!</div>
+    <button class="btn-restart" onclick="newTournamentSetup()" data-i18n="play_again">JOGAR NOVAMENTE</button>
+  </div>
+</div>
+
+<script src="teams.js"></script>
+<script src="map-data.js"></script>
+<script src="data/world-geojson.js"></script>
+<script src="desafios/desafios.js"></script>
+<script src="lang/manifest.js"></script>
+<script src="lang/pt.js"></script>
+<script src="game.js"></script>
+<script src="js/map.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/bootstrap.js"></script>
+</body>
+</html>
