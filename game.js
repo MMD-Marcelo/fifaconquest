@@ -45,6 +45,7 @@ let G = {
   selectedCountry: null,
   attackTarget: null,
   selectedAttackTeam: null,
+  selectedAttackFrom: null,
   pendingBattle: null,
   stats: {}, // playerId -> { wins, losses, draws, territories, scored, conceded }
   teamPoolMode: 'random',
@@ -734,6 +735,7 @@ function startGame() {
   G.selectedCountry = null;
   G.attackTarget = null;
   G.selectedAttackTeam = null;
+  G.selectedAttackFrom = null;
   G.pendingBattle = null;
   G.swapRewardAvailable = false;
   G.swapRewardUsedAt = 0;
@@ -790,6 +792,7 @@ function nextTurn() {
   G.selectedCountry = null;
   G.attackTarget = null;
   G.selectedAttackTeam = null;
+  G.selectedAttackFrom = null;
   // advance to next non-eliminated player
   let tries = 0;
   do {
@@ -929,6 +932,33 @@ function getBorderCountryForAttack(fromHome, targetId, playerId) {
   return path[path.length - 2];
 }
 
+function getReachableOwnTerritoriesFrom(sourceId, playerId) {
+  const reachable = new Set();
+  if (!sourceId || !COUNTRY_ID_SET.has(sourceId)) return reachable;
+  if (G.territories[sourceId]?.owner !== playerId) return reachable;
+
+  reachable.add(sourceId);
+  const stack = [sourceId];
+  while (stack.length) {
+    const currentId = stack.pop();
+    getCountryConnections(currentId).forEach(nextId => {
+      if (reachable.has(nextId)) return;
+      if (G.territories[nextId]?.owner !== playerId) return;
+      reachable.add(nextId);
+      stack.push(nextId);
+    });
+  }
+  return reachable;
+}
+
+function getAttackBorderTerritories(fromId, targetId, playerId) {
+  const reachable = getReachableOwnTerritoriesFrom(fromId, playerId);
+  if (!reachable.size) return [];
+  return getCountryConnections(targetId)
+    .filter(id => G.territories[id]?.owner === playerId)
+    .filter(id => reachable.has(id));
+}
+
 function handleCountryClick(id) {
   const pl = currentPlayerObj();
   if (pl.eliminated) return;
@@ -939,6 +969,7 @@ function handleCountryClick(id) {
     G.selectedCountry = id;
     G.attackTarget = null;
     G.selectedAttackTeam = null;
+    G.selectedAttackFrom = null;
     updateMapColors();
     renderSidebar();
     switchTab('map');
@@ -950,6 +981,8 @@ function handleCountryClick(id) {
   if (G.selectedCountry && isAttackable(id)) {
     hoverPreviewCountry = null;
     G.attackTarget = id;
+    G.selectedAttackTeam = null;
+    G.selectedAttackFrom = null;
     updateMapColors();
     renderSidebar();
     switchTab('map');
@@ -965,6 +998,8 @@ function handleCountryClick(id) {
         hoverPreviewCountry = null;
         G.selectedCountry = nId;
         G.attackTarget = id;
+        G.selectedAttackTeam = null;
+        G.selectedAttackFrom = null;
         updateMapColors();
         renderSidebar();
         switchTab('map');
@@ -978,27 +1013,23 @@ function handleCountryClick(id) {
 function getTeamsForAttack(fromId, targetId, playerId) {
   const pl = G.players.find(p => p.id === playerId);
   const homeId = Object.keys(G.homeOf).find(id => G.homeOf[id] === playerId);
-
-  // Find the border territory (the player territory adjacent to target)
-  let borderTerrId = fromId;
-  if (!getCountryConnections(fromId).includes(targetId)) {
-    const path = getAttackPath(fromId, targetId, playerId);
-    if (path && path.length >= 2) borderTerrId = path[path.length - 2];
-  }
+  if (!pl || !targetId) return [];
 
   const teams = [];
-  if (borderTerrId === homeId) {
-    // From home territory: use remaining home teams (these get spent on loss)
-    (G.homeTeams[homeId] || []).forEach(t => {
-      teams.push({ team: t, via: homeId, isHome: true });
-    });
-  } else {
-    // From conquered territory: use that territory team (never spent, always available)
-    const team = G.territories[borderTerrId]?.team;
-    if (team) teams.push({ team, via: borderTerrId, isHome: false });
-  }
+  getAttackBorderTerritories(fromId, targetId, playerId).forEach(borderTerrId => {
+    if (borderTerrId === homeId) {
+      // From home territory: use remaining home teams (these get spent on loss)
+      (G.homeTeams[homeId] || []).forEach(t => {
+        teams.push({ team: t, via: homeId, isHome: true });
+      });
+    } else {
+      // From conquered territory: use that territory team (never spent, always available)
+      const team = G.territories[borderTerrId]?.team;
+      if (team) teams.push({ team, via: borderTerrId, isHome: false });
+    }
+  });
 
-  return teams.filter((t, i, a) => a.findIndex(x => x.team === t.team) === i);
+  return teams.filter((t, i, a) => a.findIndex(x => x.team === t.team && x.via === t.via) === i);
 }
 
 // ============================================================

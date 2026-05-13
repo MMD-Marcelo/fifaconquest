@@ -10,11 +10,15 @@ function switchTab(tab) {
     if (tabEl) tabEl.classList.toggle('active', t === tab);
     if (panelEl) panelEl.classList.toggle('active', t === tab);
   });
+  document.getElementById('sidebar')?.classList.toggle('players-tab-active', tab === 'players');
   renderSidebarPanel(tab);
 }
 
 function toggleSidebar() {
-  document.getElementById('sidebar')?.classList.toggle('collapsed');
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+  sidebar.classList.toggle('collapsed');
+  sidebar.classList.toggle('players-tab-active', document.getElementById('tab-players')?.classList.contains('active'));
 }
 
 function renderSidebar() {
@@ -139,6 +143,14 @@ function renderAttackPanel() {
     `;
 
     const teams = getTeamsForAttack(G.selectedCountry, G.attackTarget, pl.id);
+    if (G.selectedAttackTeam && !G.selectedAttackFrom) {
+      const current = teams.find(t => t.team === G.selectedAttackTeam);
+      if (current) G.selectedAttackFrom = current.via;
+    }
+    if (G.selectedAttackTeam && !teams.some(t => t.team === G.selectedAttackTeam && t.via === G.selectedAttackFrom)) {
+      G.selectedAttackTeam = null;
+      G.selectedAttackFrom = null;
+    }
     if (teams.length === 0) {
       const msg = document.createElement('div');
       msg.className = 'no-attack-msg';
@@ -154,9 +166,15 @@ function renderAttackPanel() {
       opts.className = 'attack-team-options';
       teams.forEach(t => {
         const btn = document.createElement('button');
-        btn.className = 'attack-team-btn' + (G.selectedAttackTeam === t.team ? ' selected' : '');
+        const selected = G.selectedAttackTeam === t.team && G.selectedAttackFrom === t.via;
+        btn.className = 'attack-team-btn' + (selected ? ' selected' : '');
         btn.innerHTML = `${t.team} <span class="attack-team-via">${TEAM_LEAGUE[t.team]||''} &mdash; via ${COUNTRY_BY_ID.get(t.via)?.name||t.via}</span>`;
-        btn.onclick = () => { G.selectedAttackTeam = t.team; renderAttackPanel(); saveGameState(); };
+        btn.onclick = () => {
+          G.selectedAttackTeam = t.team;
+          G.selectedAttackFrom = t.via;
+          renderAttackPanel();
+          saveGameState();
+        };
         opts.appendChild(btn);
       });
       panel.appendChild(opts);
@@ -173,7 +191,7 @@ function renderAttackPanel() {
     cancelBtn.className = 'btn-cancel';
     cancelBtn.textContent = t('cancel');
     cancelBtn.onclick = () => {
-      G.selectedCountry = null; G.attackTarget = null; G.selectedAttackTeam = null;
+      G.selectedCountry = null; G.attackTarget = null; G.selectedAttackTeam = null; G.selectedAttackFrom = null;
       updateMapColors(); renderSidebar(); switchTab('map');
       saveGameState();
     };
@@ -257,6 +275,7 @@ function focusTeamCountry(countryId) {
   G.selectedCountry = G.territories[countryId]?.owner === currentPlayerObj()?.id ? countryId : null;
   G.attackTarget = null;
   G.selectedAttackTeam = null;
+  G.selectedAttackFrom = null;
   updateMapColors();
   centerMapOnCountry(countryId);
   switchTab('map');

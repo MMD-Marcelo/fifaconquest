@@ -14,7 +14,7 @@ function startBattle() {
 
   // Find which territory we're attacking FROM (for team consumption)
   const teams = getTeamsForAttack(G.selectedCountry, G.attackTarget, pl.id);
-  const attackTeamInfo = teams.find(t => t.team === attackerTeam);
+  const attackTeamInfo = teams.find(t => t.team === attackerTeam && (!G.selectedAttackFrom || t.via === G.selectedAttackFrom));
   const fromTerritoryId = attackTeamInfo?.via || G.selectedCountry;
 
   G.pendingBattle = {
@@ -182,6 +182,8 @@ function resolveBattle(result) {
   if (isDraw) {
     if (G.stats[b.attackerId]) G.stats[b.attackerId].draws++;
     if (prevOwnerPl && G.stats[prevOwnerPl.id]) G.stats[prevOwnerPl.id].draws++;
+    G.selectedAttackTeam = null;
+    G.selectedAttackFrom = null;
     const neutralMsg = !prevOwner ? recordNeutralDefenseResult(b.neutralDefenderId, false) : '';
     const scoreStr = `${scoreAtt} x ${scoreDef}`;
     addLog('EMP', `<span style="color:${pl.color}">${pl.name}</span> empatou em <strong>${targetCountry?.name}</strong> ${scoreStr}. Vez passa.${neutralMsg ? ' ' + neutralMsg : ''}`, { score: scoreStr, battleDesc });
@@ -252,11 +254,13 @@ function resolveBattle(result) {
       : (G.territories[b.fromId]?.owner === pl.id ? b.fromId : null);
     G.attackTarget = null;
     G.selectedAttackTeam = null;
+    G.selectedAttackFrom = null;
     updateChainInfo();
     maybeShowSwapReward(pl);
   } else {
     // LOSS
     removeTeamFromPlayer(pl, b.attackerTeam, b.fromId);
+    G.selectedAttackFrom = null;
 
     // If attacking from a conquered (non-home) territory, it reverts to neutral on loss
     const homeId_loss = Object.keys(G.homeOf).find(id => G.homeOf[id] === pl.id);

@@ -471,10 +471,7 @@ body * {
 }
 
 #map-container {
-  background:
-    radial-gradient(circle at 50% 50%, rgba(33, 255, 114, 0.065), transparent 34%),
-    linear-gradient(180deg, rgba(244, 247, 239, 0.025), transparent 45%),
-    var(--map-water);
+  background: var(--map-water);
 }
 
 .country-path {
@@ -664,6 +661,169 @@ body * {
   background: rgba(4, 7, 4, 0.68);
 }
 
+.challenge-backdrop {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(33, 255, 114, 0.1), transparent 34%),
+    rgba(4, 7, 4, 0.76);
+  backdrop-filter: blur(8px) saturate(1.08);
+  -webkit-backdrop-filter: blur(8px) saturate(1.08);
+}
+
+.challenge-modal.active .challenge-dialog {
+  animation: challenge-dialog-in .22s ease-out both;
+}
+
+.challenge-dialog {
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.48), 0 0 40px rgba(33, 255, 114, 0.08);
+}
+
+.challenge-head {
+  margin: 0;
+  padding: 18px 20px 16px;
+  border-bottom: 1px solid rgba(244, 247, 239, 0.12);
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.04), transparent 80%),
+    rgba(12, 17, 12, 0.36);
+}
+
+.challenge-kicker {
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.challenge-title {
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.challenge-actions .btn-mini {
+  min-height: 34px;
+}
+
+.challenge-grid {
+  padding: 18px;
+  gap: 12px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(33, 255, 114, 0.05), transparent 34%),
+    rgba(12, 17, 12, 0.18);
+}
+
+.challenge-empty {
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.026), transparent 56%),
+    rgba(14, 20, 14, 0.82);
+  border-color: rgba(244, 247, 239, 0.13);
+  border-radius: 6px;
+  padding: 18px;
+  text-align: center;
+}
+
+.challenge-item {
+  min-height: 132px;
+  padding: 14px;
+  align-content: space-between;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.034), transparent 60%),
+    rgba(14, 20, 14, 0.88);
+  border-color: rgba(244, 247, 239, 0.14);
+  box-shadow: inset 0 1px 0 rgba(244, 247, 239, 0.06);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+.challenge-item::before {
+  z-index: 0;
+  background:
+    radial-gradient(circle at 50% -18%, rgba(33, 255, 114, 0.13), transparent 48%),
+    linear-gradient(120deg, transparent 0 38%, rgba(244, 247, 239, 0.035) 48%, transparent 58% 100%);
+  opacity: 0.72;
+  transform: translateY(-8px);
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.challenge-item > * {
+  position: relative;
+  z-index: 1;
+}
+
+.challenge-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(33, 255, 114, 0.34);
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.04), transparent 60%),
+    rgba(17, 25, 17, 0.94);
+  box-shadow: inset 0 1px 0 rgba(244, 247, 239, 0.08), 0 18px 34px rgba(0, 0, 0, 0.2);
+}
+
+.challenge-item:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.challenge-player {
+  color: var(--accent);
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.challenge-name {
+  color: var(--text);
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  font-size: 17px;
+  line-height: 1.05;
+}
+
+.challenge-text {
+  color: var(--text2);
+  font-size: 13px;
+}
+
+.challenge-reveal,
+.challenge-hide {
+  min-height: 34px;
+  border-radius: 4px;
+}
+
+.challenge-item.revealed {
+  border-color: rgba(33, 255, 114, 0.42);
+  box-shadow: inset 0 1px 0 rgba(244, 247, 239, 0.08), 0 0 28px rgba(33, 255, 114, 0.08);
+}
+
+.challenge-item.revealed .challenge-secret {
+  animation: challenge-secret-in .2s ease-out both;
+}
+
+.stab {
+  transition: color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.stab:hover:not(.active) {
+  color: var(--text2);
+  background: rgba(244, 247, 239, 0.04);
+}
+
+.setup-top-btn:active,
+.btn-mini:active,
+.challenge-reveal:active,
+.challenge-hide:active,
+.map-ctrl-btn:active,
+.btn-sm:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.player-card:hover,
+.team-directory-row:hover,
+.stat-block:hover,
+#attack-panel:hover {
+  border-color: rgba(33, 255, 114, 0.24);
+}
+
 .battle-vs {
   color: var(--accent);
   text-shadow: 0 0 18px rgba(33, 255, 114, 0.32);
@@ -750,6 +910,30 @@ body * {
   }
 }
 
+@keyframes challenge-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes challenge-secret-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes setup-region-rise {
   0%,
   100% {
@@ -778,6 +962,8 @@ body * {
   #setup-screen::before,
   #game-screen::before,
   .setup-bg-country,
+  .challenge-modal.active .challenge-dialog,
+  .challenge-item.revealed .challenge-secret,
   .swap-reward-btn {
     animation: none !important;
   }
