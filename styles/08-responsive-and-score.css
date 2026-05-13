@@ -1,0 +1,107 @@
+@media (max-width: 860px) {
+  .topbar {
+    height: auto;
+    min-height: 62px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+  }
+
+  #sidebar {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    max-height: 42vh;
+    border-radius: 20px;
+  }
+
+  .map-actionbar {
+    top: 14px;
+    left: 14px;
+    right: 14px;
+  }
+
+  .btn-toggle-teams,
+  .btn-end-turn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+
+/* Score input in battle modal */
+.battle-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.score-input-wrap {
+  text-align: center;
+}
+
+.score-input-wrap label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.score-input {
+  width: 60px;
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 14px;
+  color: var(--text);
+  padding: 8px 6px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background .15s, transform .15s;
+  caret-color: var(--accent);
+}
+
+.score-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(22, 119, 255, 0.14);
+  background: rgba(255, 255, 255, 0.76);
+  transform: translateY(-1px);
+}
+
+.score-sep {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--border);
+}
+
+.btn-draw {
+  min-width: 0;
+  padding: 14px 10px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.36);
+  color: var(--muted);
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(17px, 4.2vw, 22px);
+  letter-spacing: 1px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.btn-draw:hover {
+  border-color: var(--accent3);
+  color: var(--accent3);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.62);
+}
+

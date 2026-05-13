@@ -1,0 +1,50 @@
+:root {
+  --bg: #eaf1f7;
+  --map-water: #c4d4e4;
+  --surface: rgba(255, 255, 255, 0.66);
+  --surface2: rgba(255, 255, 255, 0.42);
+  --surface-strong: rgba(255, 255, 255, 0.84);
+  --border: rgba(255, 255, 255, 0.46);
+  --border2: rgba(145, 158, 171, 0.28);
+  --accent: #1677ff;
+  --accent-hover: #005edb;
+  --accent2: #ff3b5f;
+  --accent3: #ff9f0a;
+  --text: #172033;
+  --text2: #344054;
+  --muted: #667085;
+  --muted2: #98a2b3;
+  --p1: #3b82f6;
+  --p2: #ff4d5e;
+  --p3: #2ecb70;
+  --p4: #af73ff;
+  --p5: #ffb454;
+  --neutral: #dde3ec;
+  --home-color: #d97706;
+  --radius: 18px;
+  --shadow: 0 16px 44px rgba(31, 45, 61, 0.12);
+  --shadow-md: 0 22px 70px rgba(31, 45, 61, 0.18);
+  --glass-blur: blur(22px) saturate(1.35);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(145deg, #edf6ff 0%, #f7fbff 44%, #e5eef8 100%);
+  color: var(--text);
+  font-family: Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+button,
+input {
+  font-family: Helvetica, Arial, sans-serif;
+}
+

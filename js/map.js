@@ -276,6 +276,64 @@ function getMapFeatureCollection() {
   return MAP_FEATURE_COLLECTION;
 }
 
+function setupGeometryToPath(geometry) {
+  return geometry.coordinates.map(poly => {
+    const outerRing = poly[0];
+    if (!outerRing || Math.abs(ringArea(outerRing)) < 8) return '';
+    return [outerRing].map(ring => {
+      return ring.map((pt, index) => `${index === 0 ? 'M' : 'L'}${pt[0].toFixed(1)} ${pt[1].toFixed(1)}`).join('') + 'Z';
+    }).join(' ');
+  }).filter(Boolean).join(' ');
+}
+
+function isSetupBackgroundFeature(feature) {
+  const bounds = geometryBounds(feature.geometry);
+  if (bounds.minY > MAP_HEIGHT * 0.78) return false;
+  return true;
+}
+
+function getSetupRegionClass(feature) {
+  const bounds = geometryBounds(feature.geometry);
+  const centerY = (bounds.minY + bounds.maxY) / 2;
+  const normalizedY = centerY / MAP_HEIGHT;
+  if (normalizedY > 0.68) return 'region-far-south';
+  if (normalizedY > 0.62) return 'region-south';
+  if (normalizedY > 0.5) return 'region-south-mid';
+  if (normalizedY > 0.38) return 'region-mid';
+  if (normalizedY > 0.26) return 'region-north-mid';
+  return 'region-north';
+}
+
+function renderSetupBackgroundMap() {
+  const container = document.getElementById('setup-map-bg');
+  if (!container || container.dataset.rendered === 'true') return;
+
+  const collection = getMapFeatureCollection();
+  if (!collection.features.length) return;
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'setup-network-svg');
+  svg.setAttribute('viewBox', `0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`);
+  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+
+  const landGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  landGroup.setAttribute('class', 'setup-bg-land');
+  collection.features.forEach(feature => {
+    if (!isSetupBackgroundFeature(feature)) return;
+    const d = setupGeometryToPath(feature.geometry);
+    if (!d) return;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('class', `setup-bg-country ${getSetupRegionClass(feature)}`);
+    path.setAttribute('d', d);
+    landGroup.appendChild(path);
+  });
+  svg.appendChild(landGroup);
+
+  container.replaceChildren(svg);
+  container.dataset.rendered = 'true';
+}
+
 function renderMap() {
   const container = document.getElementById('map-container');
   // Remove existing svg

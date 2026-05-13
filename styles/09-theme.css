@@ -1,0 +1,805 @@
+/* ===== FIFACONQUEST / EAFC-inspired visual layer ===== */
+@font-face {
+  font-family: 'Cruyff Sans';
+  src: url('../cruyff-sans/CruyffSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cruyff Sans';
+  src: url('../cruyff-sans/CruyffSans-Medium.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cruyff Sans';
+  src: url('../cruyff-sans/CruyffSans-Bold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cruyff Sans Expanded';
+  src: url('../cruyff-sans/CruyffSansExpanded-Heavy.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cruyff Sans Condensed';
+  src: url('../cruyff-sans/CruyffSansCondensed-Medium.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #191d19;
+  --map-water: #121812;
+  --surface: rgba(31, 36, 31, 0.9);
+  --surface2: rgba(42, 48, 42, 0.84);
+  --surface-strong: rgba(232, 238, 226, 0.96);
+  --border: rgba(237, 255, 232, 0.14);
+  --border2: rgba(36, 255, 122, 0.28);
+  --accent: #21ff72;
+  --accent-hover: #6cff9d;
+  --accent2: #ff3158;
+  --accent3: #dfff29;
+  --text: #f4f7ef;
+  --text2: #d6dfd0;
+  --muted: #a7b2a3;
+  --muted2: #737d70;
+  --neutral: #2b332d;
+  --home-color: #dfff29;
+  --radius: 8px;
+  --shadow: 0 22px 55px rgba(0, 0, 0, 0.34);
+  --shadow-md: 0 28px 80px rgba(0, 0, 0, 0.48);
+  --glass-blur: blur(12px) saturate(1.18);
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(33, 255, 114, 0.08), transparent 24%),
+    radial-gradient(circle at 84% 22%, rgba(223, 255, 41, 0.055), transparent 26%),
+    linear-gradient(180deg, rgba(244, 247, 239, 0.018), transparent 42%),
+    #191d19;
+  color: var(--text);
+  font-family: 'Cruyff Sans', Helvetica, Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: 'Cruyff Sans', Helvetica, Arial, sans-serif;
+}
+
+body * {
+  font-family: 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+}
+
+#setup-screen {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(33, 255, 114, 0.08), transparent 24%),
+    radial-gradient(circle at 50% 58%, rgba(0, 0, 0, 0.22), transparent 48%),
+    linear-gradient(180deg, rgba(244, 247, 239, 0.022), transparent 42%),
+    #191d19;
+}
+
+#setup-screen::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(33, 255, 114, 0.06), transparent 42%);
+  opacity: 0.9;
+}
+
+#setup-screen::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 0 48%, rgba(25, 29, 25, 0.56) 82%),
+    linear-gradient(90deg, rgba(25, 29, 25, 0.36), transparent 25%, transparent 75%, rgba(25, 29, 25, 0.36));
+  opacity: 0.9;
+}
+
+#game-screen::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(45% 34% at 16% 30%, rgba(33, 255, 114, 0.09), transparent 62%),
+    radial-gradient(42% 36% at 86% 82%, rgba(33, 255, 114, 0.045), transparent 64%);
+  opacity: 0.58;
+  mix-blend-mode: screen;
+  filter: blur(14px) saturate(1.05);
+}
+
+#game-screen::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(115deg, transparent 0 18%, rgba(244, 247, 239, 0.016) 18% 18.4%, transparent 18.4% 100%),
+    linear-gradient(300deg, transparent 0 62%, rgba(33, 255, 114, 0.024) 62% 62.4%, transparent 62.4% 100%);
+  opacity: 0.36;
+  mix-blend-mode: screen;
+}
+
+#setup-screen>*:not(.setup-logo-layer):not(#setup-map-bg),
+#game-screen>* {
+  position: relative;
+  z-index: 1;
+}
+
+#setup-map-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.54;
+  mix-blend-mode: screen;
+  filter: saturate(1.02) contrast(1.04);
+}
+
+.setup-network-svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 118%;
+  height: 118%;
+  transform: translate(-52%, -50%) scale(1.02);
+  transform-origin: center;
+  overflow: hidden;
+}
+
+.setup-bg-country {
+  fill: rgba(33, 255, 114, 0.13);
+  opacity: 0.28;
+  stroke: rgba(244, 247, 239, 0.07);
+  stroke-width: 0.56;
+  filter: brightness(0.68) saturate(0.76);
+  vector-effect: non-scaling-stroke;
+  animation: setup-region-rise 12s ease-in-out infinite;
+  animation-fill-mode: both;
+}
+
+.setup-bg-country.region-far-south {
+  animation-delay: 0s;
+}
+
+.setup-bg-country.region-south {
+  animation-delay: 1.2s;
+}
+
+.setup-bg-country.region-south-mid {
+  animation-delay: 2.4s;
+}
+
+.setup-bg-country.region-mid {
+  animation-delay: 3.6s;
+}
+
+.setup-bg-country.region-north-mid {
+  animation-delay: 4.8s;
+}
+
+.setup-bg-country.region-north {
+  animation-delay: 6s;
+}
+
+.setup-title,
+.topbar-title,
+.winner-name {
+  font-family: 'Cruyff Sans Expanded', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  color: var(--text);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.setup-title {
+  font-size: clamp(48px, 7vw, 92px);
+  text-shadow: 0 0 34px rgba(33, 255, 114, 0.24);
+}
+
+.setup-logo-layer {
+  top: clamp(8px, 1.2vh, 18px);
+}
+
+.setup-card,
+.challenge-card,
+#sidebar,
+.battle-card,
+.swap-card,
+.export-card,
+.winner-card {
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.035), transparent 42%),
+    linear-gradient(145deg, rgba(38, 45, 38, 0.96), rgba(21, 26, 21, 0.94)),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+
+.setup-card,
+.challenge-card,
+#sidebar,
+.battle-card,
+.swap-card,
+.export-card,
+.winner-card {
+  border-top: 2px solid rgba(33, 255, 114, 0.68);
+}
+
+.setup-card h3,
+.challenge-kicker,
+.teams-label,
+.select-team-label,
+.battle-title,
+.winner-label,
+.swap-title,
+.teams-search-title,
+.turn-label,
+.eliminated-tag,
+.stat-block-title {
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.player-input,
+.base-team-input,
+.seed-input,
+.teams-search-input,
+.neutral-defender-select select,
+#export-text,
+.score-input {
+  background: #111711;
+  border: 1px solid rgba(244, 247, 239, 0.18);
+  border-radius: 6px;
+  color: var(--text);
+}
+
+.player-input:focus,
+.base-team-input:focus,
+.seed-input:focus,
+.teams-search-input:focus,
+.score-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(33, 255, 114, 0.16);
+}
+
+.player-count-row,
+.team-mode-toggle,
+.teams-search-card,
+.map-ctrl-btn,
+.btn-toggle-teams,
+.btn-end-turn,
+.btn-sm,
+.setup-top-btn,
+.language-select,
+.challenge-item,
+.team-directory-row,
+.attack-team-btn,
+.stat-block,
+.instruction-box,
+.no-attack-msg,
+#attack-panel,
+.player-card {
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.026), transparent 56%),
+    rgba(27, 33, 27, 0.88);
+  border: 1px solid rgba(244, 247, 239, 0.13);
+  border-radius: 6px;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.count-btn,
+.btn-mini,
+.btn-sm,
+.setup-top-btn,
+.btn-toggle-teams,
+.btn-end-turn,
+.map-ctrl-btn,
+.btn-cancel,
+.challenge-reveal,
+.challenge-hide,
+.defender-team-option,
+.btn-draw {
+  border-radius: 4px;
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.035), transparent 65%),
+    #232a23;
+  color: var(--text2);
+  border: 1px solid rgba(244, 247, 239, 0.16);
+  text-transform: uppercase;
+  transition: transform .16s ease, color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.btn-start,
+.btn-attack,
+.btn-confirm-swap,
+.btn-restart,
+.btn-revive {
+  border-radius: 4px;
+  background: var(--accent);
+  color: #111711;
+  border: 1px solid var(--accent);
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  box-shadow: 0 0 28px rgba(33, 255, 114, 0.16);
+}
+
+.btn-start:hover,
+.btn-attack:hover,
+.btn-confirm-swap:hover,
+.btn-restart:hover,
+.btn-revive:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #0b100b;
+  transform: translateY(-2px) skewX(-2deg);
+}
+
+.btn-continue,
+.btn-skip-swap {
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid rgba(244, 247, 239, 0.18);
+}
+
+.btn-continue:hover,
+.btn-skip-swap:hover,
+.btn-sm:hover,
+.setup-top-btn:hover,
+.language-select:hover,
+.btn-toggle-teams:hover,
+.btn-toggle-teams.active,
+.map-ctrl-btn:hover,
+.team-mode-option input:checked+span,
+.attack-team-btn:hover,
+.attack-team-btn.selected,
+.defender-team-option:hover,
+.defender-team-option.selected,
+.btn-draw:hover {
+  background: rgba(33, 255, 114, 0.12);
+  color: var(--accent);
+  border-color: rgba(33, 255, 114, 0.52);
+  box-shadow: 0 0 20px rgba(33, 255, 114, 0.12);
+  transform: translateY(-1px);
+}
+
+.language-select,
+.language-select:hover,
+.language-select:focus {
+  background-color: #101710;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 17px) 50%,
+    calc(100% - 12px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  border-color: rgba(33, 255, 114, 0.72);
+  color: var(--accent);
+}
+
+.language-select option {
+  background: #101710;
+  color: var(--accent);
+}
+
+.btn-lose {
+  border-radius: 4px;
+  background: var(--accent2);
+}
+
+.btn-win {
+  border-radius: 4px;
+  background: var(--accent);
+  color: #111711;
+}
+
+.btn-draw {
+  background: var(--accent3);
+  color: #111711;
+}
+
+.battle-title,
+.battle-team-country,
+.score-input-wrap label,
+.neutral-defender-select label {
+  font-family: Helvetica, Arial, sans-serif !important;
+  letter-spacing: 0.6px;
+  font-variant: normal;
+  font-feature-settings: normal;
+}
+
+.battle-result-btns .btn-win,
+.battle-result-btns .btn-draw,
+.battle-result-btns .btn-lose {
+  font-family: Helvetica, Arial, sans-serif !important;
+  text-transform: uppercase;
+  font-size: clamp(14px, 2.4vw, 18px);
+  letter-spacing: 0.5px;
+  padding: 14px 6px;
+  min-width: 0;
+  overflow: visible;
+  text-align: center;
+}
+
+.team-mode-option span {
+  border-radius: 4px;
+  min-width: 106px;
+}
+
+.topbar {
+  height: 68px;
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.045), transparent 100%),
+    rgba(15, 20, 15, 0.94);
+  border-bottom: 1px solid rgba(33, 255, 114, 0.22);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.topbar-title {
+  color: var(--text);
+  font-size: 22px;
+}
+
+#map-container {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(33, 255, 114, 0.065), transparent 34%),
+    linear-gradient(180deg, rgba(244, 247, 239, 0.025), transparent 45%),
+    var(--map-water);
+}
+
+.country-path {
+  stroke: rgba(236, 255, 230, 0.32);
+  transition: fill .16s ease, stroke .16s ease, stroke-width .12s ease, filter .16s ease;
+}
+
+.map-graticule {
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+.country-path.neutral {
+  fill: #263128;
+}
+
+.country-path.no-internal-border,
+.country-path[data-id="SO"] {
+  stroke: transparent !important;
+}
+
+.country-path.p1 {
+  fill: #2877ff;
+}
+
+.country-path.p2 {
+  fill: #e83c5c;
+}
+
+.country-path.p3 {
+  fill: #21c46b;
+}
+
+.country-path.p4 {
+  fill: #a662ff;
+}
+
+.country-path.p5 {
+  fill: #ffb000;
+}
+
+.country-path.home {
+  stroke: var(--accent3) !important;
+  filter: drop-shadow(0 0 6px rgba(223, 255, 41, 0.32));
+}
+
+.country-path.selected {
+  stroke: var(--accent) !important;
+  filter: drop-shadow(0 0 8px rgba(33, 255, 114, 0.42)) brightness(1.16);
+}
+
+.country-path.attackable,
+.country-path.preview-attackable {
+  stroke: var(--accent3) !important;
+  filter: drop-shadow(0 0 8px rgba(223, 255, 41, 0.42));
+}
+
+.country-path.sea-attackable,
+.sea-route-line,
+.sea-route-dot {
+  stroke: var(--accent) !important;
+  filter: drop-shadow(0 0 6px rgba(33, 255, 114, 0.58));
+}
+
+.sea-route-line {
+  stroke-dasharray: 10 10;
+}
+
+.sea-route-dot {
+  fill: var(--accent);
+}
+
+#map-tooltip {
+  background: rgba(12, 17, 12, 0.96);
+  border: 1px solid rgba(33, 255, 114, 0.34);
+  border-radius: 6px;
+  color: var(--text);
+}
+
+#map-tooltip .tt-country,
+#map-tooltip .tt-owner {
+  color: var(--text);
+}
+
+#map-tooltip .tt-team {
+  color: var(--accent);
+}
+
+.stab {
+  color: var(--muted);
+  border-bottom-width: 1px;
+}
+
+.stab.active {
+  color: #111711;
+  border-bottom-color: var(--accent);
+  background: var(--accent);
+}
+
+.player-card {
+  border-left-width: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.player-card::after,
+.challenge-item::after,
+.team-directory-row::after,
+#attack-panel::after {
+  content: none;
+}
+
+.player-card-name,
+.challenge-title,
+.swap-heading,
+.attack-country-name,
+.battle-team-name,
+.team-directory-team {
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  letter-spacing: 0;
+}
+
+.team-chip {
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.035), transparent 70%),
+    rgba(255, 255, 255, 0.05);
+  border-color: rgba(244, 247, 239, 0.16);
+  border-radius: 4px;
+  color: var(--text2);
+  transition: transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
+}
+
+.team-chip:hover {
+  transform: translateY(-1px);
+  background: rgba(33, 255, 114, 0.08);
+  border-color: rgba(33, 255, 114, 0.34);
+  color: var(--text);
+}
+
+.team-chip.home-team {
+  color: var(--accent3);
+  border-color: rgba(223, 255, 41, 0.46);
+}
+
+.chip-league {
+  border-left-color: rgba(244, 247, 239, 0.16);
+}
+
+.player-card.eliminated-card {
+  opacity: 0.72;
+  border-color: rgba(244, 247, 239, 0.1);
+}
+
+.eliminated-status {
+  margin: 2px 0 10px;
+  color: var(--accent2);
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.player-card.eliminated-card .team-chip,
+.player-card.eliminated-card .home-territory-name,
+.player-card.eliminated-card .teams-label {
+  opacity: 0.7;
+}
+
+.player-card.eliminated-card .revive-row {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.eliminated-overlay::after {
+  content: none;
+}
+
+.player-card.can-revive {
+  background: rgba(223, 255, 41, 0.08);
+  border-color: rgba(223, 255, 41, 0.44);
+}
+
+#battle-modal,
+#swap-modal,
+#export-modal,
+#winner-modal {
+  background: rgba(4, 7, 4, 0.68);
+}
+
+.battle-vs {
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(33, 255, 114, 0.32);
+}
+
+.score-input-wrap label,
+.battle-team-country,
+.battle-context,
+.home-territory-name,
+.attack-owner,
+.swap-copy,
+.teams-search-meta,
+.team-directory-place,
+.log-time,
+.stat-row-label {
+  color: var(--muted);
+}
+
+.country-label {
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  fill: var(--text);
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.94)) drop-shadow(0 0 8px rgba(33, 255, 114, 0.32));
+}
+
+#world-svg.is-transforming .country-path,
+#world-svg.is-transforming .country-label,
+#world-svg.is-transforming .sea-route-line,
+#world-svg.is-transforming .sea-route-dot {
+  filter: none !important;
+}
+
+#world-svg.is-transforming .country-path {
+  transition: none !important;
+}
+
+.map-actionbar {
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.035), transparent 70%),
+    rgba(12, 17, 12, 0.68);
+  border: 1px solid rgba(244, 247, 239, 0.12);
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22);
+}
+
+.log-win {
+  color: var(--accent);
+}
+
+.log-lose {
+  color: var(--accent2);
+}
+
+.stat-bar-wrap {
+  background: rgba(244, 247, 239, 0.12);
+  border-radius: 0;
+}
+
+.stat-bar {
+  border-radius: 0;
+}
+
+@keyframes reward-breathe {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(223, 255, 41, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 28px rgba(223, 255, 41, 0.28);
+  }
+}
+
+@keyframes modal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98) skewX(-1deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) skewX(0);
+  }
+}
+
+@keyframes setup-region-rise {
+  0%,
+  100% {
+    opacity: 0.28;
+    filter: brightness(0.68) saturate(0.76);
+  }
+
+  20% {
+    opacity: 0.46;
+    filter: brightness(0.9) saturate(0.9);
+  }
+
+  42%,
+  54% {
+    opacity: 0.98;
+    filter: brightness(1.58) saturate(1.32);
+  }
+
+  76% {
+    opacity: 0.42;
+    filter: brightness(0.86) saturate(0.86);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #setup-screen::before,
+  #game-screen::before,
+  .setup-bg-country,
+  .swap-reward-btn {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .setup-title {
+    font-size: clamp(40px, 12vw, 58px);
+  }
+
+  .setup-logo-layer {
+    top: -26px;
+    width: 150vw;
+  }
+
+  .setup-card {
+    margin-top: clamp(58px, 9vh, 84px);
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .map-actionbar {
+    border-radius: 6px;
+  }
+}

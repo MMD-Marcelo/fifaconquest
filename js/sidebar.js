@@ -13,6 +13,10 @@ function switchTab(tab) {
   renderSidebarPanel(tab);
 }
 
+function toggleSidebar() {
+  document.getElementById('sidebar')?.classList.toggle('collapsed');
+}
+
 function renderSidebar() {
   const activeTab = document.querySelector('.tab-panel.active')?.id?.replace('sidebar-', '') || 'players';
   renderSidebarPanel(activeTab);

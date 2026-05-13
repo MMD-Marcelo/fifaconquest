@@ -18,6 +18,7 @@
 
 <!-- SETUP SCREEN -->
 <div id="setup-screen">
+  <div id="setup-map-bg" aria-hidden="true"></div>
   <div class="setup-logo-layer" aria-label="FIFACONQUEST">
     <img class="logo-img setup-logo" src="LOGO-LETTER.SVG" alt="FIFACONQUEST">
   </div>
@@ -132,6 +133,9 @@
       </div>
     </div>
     <div id="sidebar">
+      <button class="sidebar-collapse-btn" type="button" onclick="toggleSidebar()" aria-label="Minimizar menu" title="Minimizar menu">
+        <span class="sidebar-collapse-icon">&rsaquo;</span>
+      </button>
       <div class="sidebar-tabs">
         <button class="stab active" onclick="switchTab('players')" id="tab-players" data-i18n="players">Players</button>
         <button class="stab" onclick="switchTab('teams')" id="tab-teams" data-i18n="teams">Times</button>
