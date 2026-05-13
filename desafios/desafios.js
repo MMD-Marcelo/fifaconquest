@@ -1,39 +1,4 @@
-// Desafios opcionais do FIFACONQUEST.
-// Edite, remova ou adicione cartas aqui. Cada player recebe uma carta sorteada
-// na tela inicial, sem interferir nas regras da partida.
-window.CHALLENGE_CARDS = [
-  { name: 'Colecionador europeu', text: 'Colete 1 time de cada uma das 5 grandes ligas: Premier League, La Liga, Serie A, Bundesliga e Ligue 1.' },
-  { name: 'Trinca inglesa', text: 'Controle 3 territorios na mesma rodada usando diferentes times da Premier League.' },
-  { name: 'La Liga em casa', text: 'Conquiste a Espanha com um time de La Liga e mantenha o controle por 3 turnos.' },
-  { name: 'Italia protegida', text: 'Conquiste a Italia com um time da Serie A e mantenha o controle por 3 turnos.' },
-  { name: 'Muralha alema', text: 'Conquiste a Alemanha com um time da Bundesliga e mantenha o controle por 3 turnos.' },
-  { name: 'Bleu continental', text: 'Conquiste a Franca com um time da Ligue 1 e mantenha o controle por 3 turnos.' },
-  { name: 'Dominio iberico', text: 'Controle 3 territorios na Europa na mesma rodada usando diferentes times de Portugal ou Espanha.' },
-  { name: 'Superclassico', text: 'Colete River Plate e Boca Juniors na mesma partida.' },
-  { name: 'Argentina forte', text: 'Controle 3 territorios da America do Sul usando times da Liga Argentina.' },
-  { name: 'MLS global', text: 'Conquiste 3 territorios na mesma rodada usando diferentes times da MLS.' },
-  { name: 'Holanda total', text: 'Controle 3 territorios na mesma rodada usando diferentes times da Eredivisie.' },
-  { name: 'Quarteto holandes', text: 'Colete 3 entre Ajax, PSV, Feyenoord e AZ Alkmaar.' },
-  { name: 'Poder saudita', text: 'Domine Israel com um time saudita usando o poder de troca e mantenha o controle por 3 rodadas.' },
-  { name: 'Trinca turca', text: 'Controle 3 territorios na mesma rodada usando diferentes times da Super Lig.' },
-  { name: 'Vikings', text: 'Conquiste 3 territorios na mesma rodada usando diferentes times da Noruega, Suecia ou Dinamarca.' },
-  { name: 'Leste europeu', text: 'Controle 3 territorios na mesma rodada usando diferentes times da Polonia, Romenia ou Hungria.' },
-  { name: 'Escocia resiste', text: 'Controle 3 territorios na mesma rodada usando diferentes times da Escocia.' },
-  { name: 'Baixa altitude', text: 'Controle 3 territorios na mesma rodada usando diferentes times da Belgica, Holanda ou Suica.' },
-  { name: 'Ponte atlantica', text: 'Conquiste 4 territorios por ataque maritimo na mesma rodada.' },
-  { name: 'Base inviolavel', text: 'Defenda sua base com sucesso sem perder nenhum time 3 vezes.' },
-  { name: 'Virada continental', text: 'Conquiste territorios em 4 continentes diferentes na mesma rodada.' },
-  { name: 'Cerco europeu', text: 'Controle 6 territorios na Europa ao mesmo tempo.' },
-  { name: 'Expansao africana', text: 'Controle 5 territorios na Africa ao mesmo tempo.' },
-  { name: 'Copa do Mundo', text: 'Controle Brasil, Alemanha, Italia, Argentina e Franca ao mesmo tempo.' },
-  { name: 'BRICS', text: 'Controle Brasil, Russia, China, India e Africa do Sul ao mesmo tempo.' },
-  { name: 'Imperio iberico', text: 'Controle Espanha, Portugal, Brasil, Argentina e Mexico ao mesmo tempo.' },
-  { name: 'Rota do Mediterraneo', text: 'Controle Espanha, Franca, Italia, Grecia e Turquia ao mesmo tempo.' },
-  { name: 'Potencias do Pacifico', text: 'Controle Estados Unidos, Japao, Coreia do Sul, Australia e Mexico ao mesmo tempo.' },
-  { name: 'Coracao da Europa', text: 'Controle Alemanha, Franca, Italia, Suica e Austria ao mesmo tempo.' },
-  { name: 'America completa', text: 'Controle Canada, Estados Unidos, Mexico, Brasil e Argentina ao mesmo tempo.' },
-  { name: 'Copa Africana', text: 'Controle Egito, Nigeria, Camaroes, Senegal e Marrocos ao mesmo tempo.' },
-  { name: 'Costa do Ouro', text: 'Controle Senegal, Costa do Marfim, Gana, Nigeria e Camaroes ao mesmo tempo.' },
-  { name: 'Tigres Asiaticos', text: 'Controle Japao, Coreia do Sul, China, India e Australia ao mesmo tempo.' },
-  { name: 'Rota da Seda', text: 'Controle Turquia, Ira, Arabia Saudita, India e China ao mesmo tempo.' }
-];
+// Registro de cartas de desafio por idioma.
+// Edite as cartas nos arquivos desta pasta: pt.js, en.js, es.js, it.js e fr.js.
+window.CHALLENGE_CARDS_BY_LANG = window.CHALLENGE_CARDS_BY_LANG || {};
+window.CHALLENGE_CARDS = window.CHALLENGE_CARDS || [];

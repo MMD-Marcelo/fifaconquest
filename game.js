@@ -439,6 +439,21 @@ function updateBaseTeamModeUI() {
   if (option) option.checked = true;
 }
 
+function getBaseTeamControlValue(playerIndex, slot) {
+  return document.getElementById(`base-team-${playerIndex}-${slot}`)?.value || '';
+}
+
+function buildBaseTeamSelect(playerIndex, slot, value) {
+  const options = [
+    `<option value="">${escapeHtml(t('team_slot', { n: slot + 1 }))}</option>`,
+    ...ALL_TEAMS.map(team => {
+      const selected = team === value ? ' selected' : '';
+      return `<option value="${escapeHtml(team)}"${selected}>${escapeHtml(team)}</option>`;
+    })
+  ].join('');
+  return `<select class="base-team-input" id="base-team-${playerIndex}-${slot}">${options}</select>`;
+}
+
 function getEliteLockedTeams() {
   const byLeague = ALL_TEAMS.filter(team => ELITE_LOCKED_LEAGUES.has(TEAM_LEAGUE[team]));
   const byName = ELITE_LOCKED_TEAMS.filter(team => ALL_TEAMS.includes(team));
@@ -512,10 +527,9 @@ function renderPlayerSetup() {
   const cfg = document.getElementById('players-config');
   const previousNames = Array.from({ length: playerCount }, (_, i) => document.getElementById(`pname-${i}`)?.value);
   const previousBaseTeams = Array.from({ length: playerCount }, (_, i) => [0, 1, 2]
-    .map(slot => document.getElementById(`base-team-${i}-${slot}`)?.value));
+    .map(slot => getBaseTeamControlValue(i, slot)));
   cfg.innerHTML = '';
   const manualBaseTeams = getSelectedBaseTeamMode() === BASE_TEAM_MODES.MANUAL;
-  const listId = 'team-choice-list';
   for (let i = 0; i < playerCount; i++) {
     const row = document.createElement('div');
     row.className = 'player-row' + (manualBaseTeams ? ' player-row-manual' : '');
@@ -524,19 +538,13 @@ function renderPlayerSetup() {
       <input class="player-input" id="pname-${i}" type="text" placeholder="${t('player_placeholder', { n: i + 1 })}" value="${escapeHtml(previousNames[i] || DEFAULT_NAMES[i])}">
       ${manualBaseTeams ? `
         <div class="base-team-inputs">
-          <input class="base-team-input" id="base-team-${i}-0" list="${listId}" type="text" placeholder="${t('team_slot', { n: 1 })}" value="${escapeHtml(previousBaseTeams[i]?.[0] || '')}">
-          <input class="base-team-input" id="base-team-${i}-1" list="${listId}" type="text" placeholder="${t('team_slot', { n: 2 })}" value="${escapeHtml(previousBaseTeams[i]?.[1] || '')}">
-          <input class="base-team-input" id="base-team-${i}-2" list="${listId}" type="text" placeholder="${t('team_slot', { n: 3 })}" value="${escapeHtml(previousBaseTeams[i]?.[2] || '')}">
+          ${buildBaseTeamSelect(i, 0, previousBaseTeams[i]?.[0] || '')}
+          ${buildBaseTeamSelect(i, 1, previousBaseTeams[i]?.[1] || '')}
+          ${buildBaseTeamSelect(i, 2, previousBaseTeams[i]?.[2] || '')}
         </div>
       ` : ''}
     `;
     cfg.appendChild(row);
-  }
-  if (manualBaseTeams && !document.getElementById(listId)) {
-    const datalist = document.createElement('datalist');
-    datalist.id = listId;
-    datalist.innerHTML = ALL_TEAMS.map(team => `<option value="${escapeHtml(team)}"></option>`).join('');
-    cfg.appendChild(datalist);
   }
 }
 
@@ -563,7 +571,9 @@ function escapeHtml(value) {
 function drawChallenges() {
   const grid = document.getElementById('challenge-grid');
   if (!grid) return;
-  const cards = Array.isArray(window.CHALLENGE_CARDS) ? window.CHALLENGE_CARDS.filter(c => c?.text) : [];
+  const cardsByLang = window.CHALLENGE_CARDS_BY_LANG || {};
+  const localizedCards = cardsByLang[currentLanguage] || cardsByLang[LANGUAGE_FALLBACK] || window.CHALLENGE_CARDS;
+  const cards = Array.isArray(localizedCards) ? localizedCards.filter(c => c?.text) : [];
   if (cards.length === 0) {
     grid.innerHTML = `<div class="challenge-empty">${t('challenge_missing')}</div>`;
     return;
@@ -600,6 +610,14 @@ function clearChallenges() {
   grid.innerHTML = `<div class="challenge-empty">${t('challenge_empty')}</div>`;
 }
 
+function openChallengeModal() {
+  document.getElementById('challenge-modal')?.classList.add('active');
+}
+
+function closeChallengeModal() {
+  document.getElementById('challenge-modal')?.classList.remove('active');
+}
+
 function findTeamByInput(value) {
   const needle = String(value || '').trim().toLowerCase();
   if (!needle) return '';
@@ -608,7 +626,7 @@ function findTeamByInput(value) {
 
 function getManualBaseTeamsForPlayer(index) {
   return [0, 1, 2]
-    .map(slot => findTeamByInput(document.getElementById(`base-team-${index}-${slot}`)?.value))
+    .map(slot => findTeamByInput(getBaseTeamControlValue(index, slot)))
     .filter((team, i, arr) => team && arr.indexOf(team) === i);
 }
 
@@ -743,7 +761,9 @@ function startGame() {
 function showScreen(which) {
   document.getElementById('setup-screen').style.display = (which === 'setup') ? 'flex' : 'none';
   const setupLang = document.getElementById('language-select-setup');
+  const setupTopActions = document.getElementById('setup-top-actions');
   if (setupLang) setupLang.style.display = which === 'setup' ? 'block' : 'none';
+  if (setupTopActions) setupTopActions.style.display = which === 'setup' ? 'flex' : 'none';
   const gs = document.getElementById('game-screen');
   gs.classList.toggle('active', which === 'game');
   if (which === 'setup') {
@@ -751,6 +771,8 @@ function showScreen(which) {
     document.getElementById('battle-modal').classList.remove('active');
     document.getElementById('swap-modal')?.classList.remove('active');
     refreshContinueButton();
+  } else {
+    closeChallengeModal();
   }
 }
 

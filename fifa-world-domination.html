@@ -8,9 +8,13 @@
 </head>
 <body>
 
-<select class="language-select setup-language-select" id="language-select-setup" onchange="setLanguage(this.value)" aria-label="Language">
-  <option value="pt">PT</option>
-</select>
+<div class="setup-top-actions" id="setup-top-actions">
+  <button class="setup-top-btn" type="button" onclick="triggerSaveImport()" data-i18n="load_short">CARREGAR</button>
+  <button class="setup-top-btn" type="button" onclick="openChallengeModal()" data-i18n="challenge_short">DESAFIO</button>
+  <select class="language-select setup-language-select" id="language-select-setup" onchange="setLanguage(this.value)" aria-label="Language">
+    <option value="pt">PT</option>
+  </select>
+</div>
 
 <!-- SETUP SCREEN -->
 <div id="setup-screen">
@@ -56,27 +60,31 @@
       </div>
     </div>
   </div>
-  <div class="challenge-card">
+  <div class="setup-actions">
+    <button class="btn-start" onclick="startGame()" data-i18n="start_tournament">INICIAR CAMPEONATO</button>
+    <button class="btn-continue" id="btn-continue-game" onclick="continueSavedGame()" style="display:none;" data-i18n="continue_game">CONTINUAR PARTIDA</button>
+  </div>
+  <input type="file" id="save-import-input" accept="application/json,.json" onchange="importSaveFile(event)" hidden>
+</div>
+
+<div id="challenge-modal" class="challenge-modal">
+  <div class="challenge-backdrop" onclick="closeChallengeModal()"></div>
+  <div class="challenge-card challenge-dialog" role="dialog" aria-modal="true" aria-labelledby="challenge-title">
     <div class="challenge-head">
       <div>
         <div class="challenge-kicker" data-i18n="challenges">Desafios</div>
-        <div class="challenge-title" data-i18n="optional_cards">Cartas opcionais</div>
+        <div class="challenge-title" id="challenge-title" data-i18n="optional_cards">Cartas opcionais</div>
       </div>
       <div class="challenge-actions">
         <button class="btn-mini" onclick="drawChallenges()" data-i18n="draw">Sortear</button>
         <button class="btn-mini" onclick="clearChallenges()" data-i18n="clear">Limpar</button>
+        <button class="btn-mini" onclick="closeChallengeModal()" data-i18n="close">Fechar</button>
       </div>
     </div>
     <div class="challenge-grid" id="challenge-grid">
       <div class="challenge-empty" data-i18n="challenge_empty">Sorteie os desafios opcionais quando quiser.</div>
     </div>
   </div>
-  <div class="setup-actions">
-    <button class="btn-start" onclick="startGame()" data-i18n="start_tournament">INICIAR CAMPEONATO</button>
-    <button class="btn-continue" onclick="triggerSaveImport()" data-i18n="import_save">IMPORTAR SAVE</button>
-    <button class="btn-continue" id="btn-continue-game" onclick="continueSavedGame()" style="display:none;" data-i18n="continue_game">CONTINUAR PARTIDA</button>
-  </div>
-  <input type="file" id="save-import-input" accept="application/json,.json" onchange="importSaveFile(event)" hidden>
 </div>
 
 <!-- GAME SCREEN -->
@@ -220,6 +228,11 @@
 <script src="map-data.js"></script>
 <script src="data/world-geojson.js"></script>
 <script src="desafios/desafios.js"></script>
+<script src="desafios/pt.js"></script>
+<script src="desafios/en.js"></script>
+<script src="desafios/es.js"></script>
+<script src="desafios/it.js"></script>
+<script src="desafios/fr.js"></script>
 <script src="lang/manifest.js"></script>
 <script src="lang/pt.js"></script>
 <script src="game.js"></script>

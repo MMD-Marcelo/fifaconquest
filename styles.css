@@ -516,6 +516,34 @@ input {
   display: grid;
 }
 
+.challenge-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.challenge-modal.active {
+  display: flex;
+}
+
+.challenge-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 10, 6, 0.72);
+}
+
+.challenge-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(820px, 94vw);
+  max-height: min(78vh, 720px);
+  overflow: auto;
+}
+
 .setup-actions {
   width: 520px;
   max-width: 90vw;
@@ -670,10 +698,41 @@ input {
   font-weight: 700;
 }
 
-.setup-language-select {
+.setup-top-actions {
   position: fixed;
   top: 24px;
   right: 24px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setup-top-btn {
+  min-height: 36px;
+  padding: 8px 13px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.52);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.setup-top-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: #162016;
+}
+
+.setup-language-select {
+  position: static;
+  top: auto;
+  right: auto;
   z-index: 500;
 }
 
@@ -2399,6 +2458,7 @@ body * {
 .btn-toggle-teams,
 .btn-end-turn,
 .btn-sm,
+.setup-top-btn,
 .language-select,
 .challenge-item,
 .team-directory-row,
@@ -2419,6 +2479,7 @@ body * {
 .count-btn,
 .btn-mini,
 .btn-sm,
+.setup-top-btn,
 .btn-toggle-teams,
 .btn-end-turn,
 .map-ctrl-btn,
@@ -2471,6 +2532,7 @@ body * {
 .btn-continue:hover,
 .btn-skip-swap:hover,
 .btn-sm:hover,
+.setup-top-btn:hover,
 .language-select:hover,
 .btn-toggle-teams:hover,
 .btn-toggle-teams.active,

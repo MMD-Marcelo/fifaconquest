@@ -36,8 +36,8 @@ function startBattle() {
   let ctx = '';
   const targetOwner = targetTerr.owner ? G.players.find(p => p.id === targetTerr.owner) : null;
   if (targetOwner) ctx = `${targetOwner.name} defende ${targetCountry?.name}`;
-  else ctx = `TerritÃ³rio neutro: ${targetCountry?.name}`;
-  if (G.pendingBattle.isHome) ctx += ` (Base â€” ${G.homeLives[G.attackTarget]} vida${G.homeLives[G.attackTarget]!==1?'s':''})`;
+  else ctx = `Territorio neutro: ${targetCountry?.name}`;
+  if (G.pendingBattle.isHome) ctx += ` (Base - ${G.homeLives[G.attackTarget]} vida${G.homeLives[G.attackTarget]!==1?'s':''})`;
   document.getElementById('battle-context').textContent = ctx;
   renderDefenderTeamPicker();
   renderNeutralDefenderPicker();
@@ -222,12 +222,12 @@ function resolveBattle(result) {
       // Gain territory
       if (prevOwnerPl) {
         prevOwnerPl.territories = prevOwnerPl.territories.filter(t => t !== b.targetId);
-        // Loser does NOT lose territory team â€” it stays with the territory
+        // Loser does NOT lose territory team - it stays with the territory
       }
       G.territories[b.targetId].owner = pl.id;
       if (!pl.territories.includes(b.targetId)) pl.territories.push(b.targetId);
       // Winner gets the territory's team (added to conquered teams)
-      // Note: territory teams are NOT in pl.teams â€” they're accessed via pl.territories
+      // Note: territory teams are NOT in pl.teams - they're accessed via pl.territories
       // WIN: do NOT remove attacker's team on victory
       
       const scoreStrWin = `${scoreAtt} x ${scoreDef}`;
@@ -406,7 +406,7 @@ function removeHomeDefenderTeam(countryId, team) {
 }
 
 function removeTeamFromPlayer(pl, team, fromTerritoryId) {
-  // Only remove HOME teams â€” territory teams are never removed, they stay with the territory.
+  // Only remove HOME teams - territory teams are never removed, they stay with the territory.
   const homeId = Object.keys(G.homeOf).find(id => G.homeOf[id] === pl.id);
   if (homeId && G.homeTeams[homeId]) {
     const hi = G.homeTeams[homeId].indexOf(team);

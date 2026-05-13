@@ -49,19 +49,19 @@ function renderPlayersPanel() {
         ${isCurrent ? '<span class="current-turn-tag">VEZ</span>' : ''}
         ${pl.eliminated ? '<span class="eliminated-tag">ELIMINADO</span>' : ''}
       </div>
-      ${pl.eliminated ? '<div class="eliminated-status">TerritÃ³rios neutralizados. Pode defender neutros para tentar reviver.</div>' : ''}
+      ${pl.eliminated ? '<div class="eliminated-status">Territorios neutralizados. Pode defender neutros para tentar reviver.</div>' : ''}
       ${homeCountry ? `
         <div class="home-territory-name" style="font-size:12px;color:var(--muted);margin-bottom:6px;">Base: <strong style="color:var(--text)">${homeCountry?.name||''}</strong><span style="margin-left:8px;color:var(--accent3)">${liveDots}</span></div>
       ` : ''}
       <div class="teams-label">Times da base (${pl.teams.length})</div>
       <div class="team-list">
         ${pl.teams.length === 0
-          ? '<span style="font-size:11px;color:var(--muted)">Sem times de base</span>'
+          ? '<span class="empty-base-teams" style="font-size:11px;color:var(--muted)">Sem times de base</span>'
           : pl.teams.map(t => '<div class="team-chip home-team"><span class="chip-name">' + t + '</span><span class="chip-league">' + (TEAM_LEAGUE[t]||'') + '</span></div>').join('')}
       </div>
       ${pl.territories.filter(tid => tid !== homeId && !G.homeOf[tid]).length > 0 ? '<div class="teams-label" style="margin-top:6px">Times conquistados</div><div class="team-list">' + pl.territories.filter(tid => tid !== homeId && !G.homeOf[tid]).map(tid => { const t = G.territories[tid]?.team || ''; const cn = COUNTRY_BY_ID.get(tid)?.name || tid; return '<div class="team-chip" title="' + cn + '"><span class="chip-name">' + t + '</span><span class="chip-league">' + (TEAM_LEAGUE[t]||'') + '</span></div>'; }).join('') + '</div>' : ''}
       <div style="margin-top:8px;font-size:12px;color:var(--muted);">
-        ${pl.territories.length} territÃ³rio${pl.territories.length !== 1 ? 's' : ''}
+        ${pl.territories.length} territorio${pl.territories.length !== 1 ? 's' : ''}
       </div>
     `;
     const headerState = div.querySelector('.current-turn-tag, .eliminated-tag');
@@ -76,7 +76,7 @@ function renderPlayersPanel() {
     const teamLabels = div.querySelectorAll('.teams-label');
     if (teamLabels[0]) teamLabels[0].textContent = `${t('base_teams')} (${pl.teams.length})`;
     if (teamLabels[1]) teamLabels[1].textContent = t('conquered_teams');
-    const emptyBase = div.querySelector('.team-list span');
+    const emptyBase = div.querySelector('.empty-base-teams');
     if (emptyBase) emptyBase.textContent = t('no_base_teams');
     const territoryCount = div.querySelector('div[style*="margin-top:8px"]');
     if (territoryCount) territoryCount.textContent = `${pl.territories.length} ${t('territories')}`;
@@ -130,7 +130,7 @@ function renderAttackPanel() {
     panel.innerHTML = `<h3>${t('attack_target')}</h3>
       <div class="attack-country-name">${targetCountry?.name}</div>
       <div class="attack-team-name">${targetTerr?.team}</div>
-      <div class="attack-owner">${targetOwner ? `<span style="color:${targetOwner.color}">â— ${targetOwner.name}</span>` : t('neutral_territory')}
+      <div class="attack-owner">${targetOwner ? `<span style="color:${targetOwner.color}">${escapeHtml(t('controlled_by', { name: targetOwner.name }))}</span>` : t('neutral_territory')}
         ${isHomeTarget ? `<span style="color:var(--home-color)">  ${t('base')}! (${homeDefenderLives}/3)</span>` : ''}</div>
     `;
 

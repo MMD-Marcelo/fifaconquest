@@ -554,12 +554,12 @@ function showTooltip(e, id) {
   }
   ttLeagueEl.textContent = ttLeagueName;
   const ownerEl = document.getElementById('tt-owner');
-  if (terr.owner) {
-    const pl = G.players.find(p => p.id === terr.owner);
-    ownerEl.innerHTML = `<span style="color:${pl.color}">â— ${pl.name}</span>`;
-  } else if (G.homeOf[id]) {
+  if (G.homeOf[id]) {
     const pl = G.players.find(p => p.id === G.homeOf[id]);
-    ownerEl.innerHTML = `<span style="color:${pl.color}">${t('base_of', { name: pl.name })}</span>`;
+    ownerEl.innerHTML = `<span style="color:${pl.color}">${escapeHtml(t('base_of', { name: pl.name }))}</span>`;
+  } else if (terr.owner) {
+    const pl = G.players.find(p => p.id === terr.owner);
+    ownerEl.innerHTML = `<span style="color:${pl.color}">${escapeHtml(t('controlled_by', { name: pl.name }))}</span>`;
   } else {
     ownerEl.innerHTML = `<span style="color:var(--muted)">${t('neutral_territory')}</span>`;
   }
@@ -680,7 +680,7 @@ function applyMapTransform(svg) {
   svg.style.transformOrigin = 'center center';
   updateLabelVisibilityForZoom();
   return;
-  // Show/hide labels based on zoom â€” scale font inversely to CSS transform
+  // Show/hide labels based on zoom - scale font inversely to CSS transform
   const labelGroup = document.getElementById('country-labels');
   if (labelGroup) {
     // Target ~11px screen size; SVG is scaled by mapTransform.scale via CSS
