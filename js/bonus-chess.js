@@ -2,6 +2,7 @@
 
 const CHESS_FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const CHESS_BACK_RANK = ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'];
+const CHESS_SAVE_KEY = 'fifaconquest.chess.save.v1';
 const CHESS_PIECES = {
   k: { labelKey: 'chess_piece_king', icon: { w: '&#9812;', b: '&#9818;' } },
   q: { labelKey: 'chess_piece_queen', icon: { w: '&#9813;', b: '&#9819;' } },
@@ -31,6 +32,7 @@ function openChessMode() {
   showScreen('chess');
   showChessSetup();
   renderChessManualTeams();
+  refreshChessContinueButton();
 }
 
 function backToSetupFromChess() {
@@ -57,6 +59,7 @@ function resetChessMode() {
   document.getElementById('chess-game').classList.remove('active');
   document.getElementById('chess-setup').style.display = 'grid';
   setChessScreenMode('setup');
+  clearSavedChessGame();
   renderChessManualTeams();
 }
 
@@ -66,6 +69,135 @@ function showChessSetup() {
   if (setup) setup.style.display = 'grid';
   document.getElementById('chess-battle-modal')?.classList.remove('active');
   setChessScreenMode('setup');
+  refreshChessContinueButton();
+}
+
+function buildChessSavePayload() {
+  return {
+    type: 'fifaconquest-chess',
+    version: 1,
+    savedAt: Date.now(),
+    chess: {
+      ...CHESS,
+      animating: false,
+      pending: null,
+      nameFadeSquare: null
+    }
+  };
+}
+
+function validateChessSavePayload(payload) {
+  if (payload?.type !== 'fifaconquest-chess' || !payload.chess?.board) return false;
+  if (!['w', 'b'].includes(payload.chess.turn)) return false;
+  return Object.values(payload.chess.board).every(piece => (
+    piece &&
+    ['w', 'b'].includes(piece.color) &&
+    Object.prototype.hasOwnProperty.call(CHESS_PIECES, piece.type) &&
+    typeof piece.team === 'string'
+  ));
+}
+
+function hasActiveChessGame() {
+  return !!Object.keys(CHESS.board || {}).length;
+}
+
+function saveChessGameState() {
+  if (!hasActiveChessGame()) return;
+  try {
+    localStorage.setItem(CHESS_SAVE_KEY, JSON.stringify(buildChessSavePayload()));
+    refreshChessContinueButton();
+  } catch (err) {
+    console.warn('Nao foi possivel salvar o xadrez.', err);
+  }
+}
+
+function loadSavedChessPayload() {
+  try {
+    const raw = localStorage.getItem(CHESS_SAVE_KEY);
+    if (!raw) return null;
+    const payload = JSON.parse(raw);
+    return validateChessSavePayload(payload) ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearSavedChessGame() {
+  try {
+    localStorage.removeItem(CHESS_SAVE_KEY);
+  } catch {}
+  refreshChessContinueButton();
+}
+
+function refreshChessContinueButton() {
+  const btn = document.getElementById('btn-continue-chess');
+  if (!btn) return;
+  const payload = loadSavedChessPayload();
+  btn.style.display = payload ? 'block' : 'none';
+  if (payload?.savedAt) {
+    const date = new Date(payload.savedAt);
+    const locale = currentLanguage === 'pt' ? 'pt-BR' : currentLanguage;
+    const stamp = `${date.toLocaleDateString(locale)} ${date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}`;
+    btn.textContent = t('continue_chess_date', { date: stamp });
+  } else {
+    btn.textContent = t('continue_chess');
+  }
+}
+
+function applyChessSavePayload(payload) {
+  if (!validateChessSavePayload(payload)) return false;
+  CHESS = {
+    ...payload.chess,
+    pending: null,
+    animating: false,
+    nameFadeSquare: null,
+    selected: null,
+    log: Array.isArray(payload.chess.log) ? payload.chess.log : [],
+    captured: Array.isArray(payload.chess.captured) ? payload.chess.captured : [],
+    players: payload.chess.players || { w: 'Player 1', b: 'Player 2' }
+  };
+  document.getElementById('chess-setup').style.display = 'none';
+  document.getElementById('chess-game').classList.add('active');
+  setChessScreenMode('game');
+  renderChessMode();
+  saveChessGameState();
+  return true;
+}
+
+function continueSavedChessGame() {
+  const payload = loadSavedChessPayload();
+  if (!payload) {
+    clearSavedChessGame();
+    return;
+  }
+  applyChessSavePayload(payload);
+}
+
+function triggerChessSaveImport() {
+  document.getElementById('chess-save-import-input')?.click();
+}
+
+function importChessSaveFile(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const payload = JSON.parse(String(reader.result || ''));
+      if (!applyChessSavePayload(payload)) throw new Error('invalid chess save');
+    } catch {
+      alert(t('import_error'));
+    } finally {
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function downloadChessSaveFile() {
+  if (!hasActiveChessGame()) return;
+  const stamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+  downloadTextFile(`fifaconquest-chess-save-${stamp}.json`, JSON.stringify(buildChessSavePayload(), null, 2), 'application/json;charset=utf-8');
 }
 
 function setChessScreenMode(mode) {
@@ -178,6 +310,7 @@ function startChessMode() {
   document.getElementById('chess-game').classList.add('active');
   setChessScreenMode('game');
   renderChessMode();
+  saveChessGameState();
 }
 
 function makeChessPiece(color, type, team) {
@@ -319,6 +452,7 @@ function resolveChessBattle(attackerWon) {
         CHESS.finishingKing = null;
         CHESS.log.push(t('chess_log_king_captured', { team: pending.attacker.team }));
         renderChessMode();
+        saveChessGameState();
         return;
       }
       CHESS.log.push(t('chess_log_captured', { attacker: pending.attacker.team, defender: pending.defender.team }));
@@ -372,6 +506,7 @@ function finishChessTurn() {
     CHESS.log.push(t('chess_log_stalemate'));
   }
   renderChessMode();
+  saveChessGameState();
 }
 
 function setChessStatsView(color) {

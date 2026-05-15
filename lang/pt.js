@@ -108,6 +108,8 @@ window.FIFACONQUEST_LANGUAGE_PACKS['pt'] = {
     "white_player":  "Jogador branco",
     "black_player":  "Jogador preto",
     "start_chess":  "INICIAR XADREZ",
+    "continue_chess":  "CONTINUAR XADREZ",
+    "continue_chess_date":  "CONTINUAR XADREZ - {date}",
     "turn":  "Turno",
     "chess_help":  "Movimente normalmente. Ao capturar, joguem no FIFA ate sair o primeiro gol.",
     "captured_pieces":  "Pecas Capturadas",

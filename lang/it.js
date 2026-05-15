@@ -108,6 +108,8 @@ window.FIFACONQUEST_LANGUAGE_PACKS['it'] = {
     "white_player":  "Giocatore bianco",
     "black_player":  "Giocatore nero",
     "start_chess":  "INIZIA SCACCHI",
+    "continue_chess":  "CONTINUA SCACCHI",
+    "continue_chess_date":  "CONTINUA SCACCHI - {date}",
     "turn":  "Turno",
     "chess_help":  "Muovi normalmente. Quando catturi, giocate a FIFA fino al primo gol.",
     "captured_pieces":  "Pezzi Catturati",

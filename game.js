@@ -141,6 +141,7 @@ function applyTranslations() {
     if (typeof renderChessManualTeams === 'function') renderChessManualTeams();
     if (typeof renderChessMode === 'function') renderChessMode();
   }
+  if (typeof refreshChessContinueButton === 'function') refreshChessContinueButton();
 }
 
 async function setLanguage(lang) {

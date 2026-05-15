@@ -94,19 +94,28 @@
   <div class="chess-shell">
     <div class="chess-topbar">
       <div class="chess-topbar-brand">
-        <div class="chess-title" data-i18n="chess_title">Xadrez FIFA</div>
+        <img class="chess-logo" src="chess-logo.svg" alt="FIFA Chess">
         <div class="chess-kicker" data-i18n="bonus_mode">Modo bônus</div>
       </div>
       <div class="chess-topbar-actions">
+        <button class="btn-sm" type="button" onclick="triggerChessSaveImport()" data-i18n="load_short">CARREGAR</button>
+        <button class="btn-sm" type="button" onclick="downloadChessSaveFile()" data-i18n="download_save">BAIXAR SAVE</button>
         <button class="btn-sm" type="button" onclick="backToSetupFromChess()" data-i18n="back">VOLTAR</button>
         <button class="btn-sm" type="button" onclick="resetChessMode()" data-i18n="restart">REINICIAR</button>
       </div>
     </div>
 
     <div class="chess-setup" id="chess-setup">
+      <div class="chess-setup-top-actions">
+        <button class="setup-top-btn" type="button" onclick="triggerChessSaveImport()" data-i18n="load_short">CARREGAR</button>
+        <button class="setup-top-btn" type="button" onclick="backToSetupFromChess()" data-i18n="back">VOLTAR</button>
+        <select class="language-select chess-setup-language-select" id="language-select-chess" onchange="setLanguage(this.value)" aria-label="Language">
+          <option value="pt">PT</option>
+        </select>
+      </div>
       <div class="chess-setup-hero">
         <div class="chess-kicker" data-i18n="bonus_mode">Modo bônus</div>
-        <div class="chess-setup-title"><span data-i18n="chess_title_main">XADREZ</span><span>FC</span></div>
+        <img class="chess-setup-logo" src="chess-logo.svg" alt="FIFA Chess">
       </div>
       <div class="chess-setup-panel">
         <div class="chess-section-title" data-i18n="configuration">Configuração</div>
@@ -143,6 +152,7 @@
         </div>
         <div class="chess-manual-teams" id="chess-manual-teams"></div>
         <button class="btn-start chess-start-btn" type="button" onclick="startChessMode()" data-i18n="start_chess">INICIAR XADREZ</button>
+        <button class="btn-continue chess-continue-btn" id="btn-continue-chess" type="button" onclick="continueSavedChessGame()" style="display:none;" data-i18n="continue_chess">CONTINUAR XADREZ</button>
       </div>
     </div>
 
@@ -171,6 +181,7 @@
     </div>
   </div>
 </div>
+<input type="file" id="chess-save-import-input" accept="application/json,.json" onchange="importChessSaveFile(event)" hidden>
 
 <div id="chess-battle-modal" class="chess-battle-modal">
   <div class="battle-card chess-battle-card">

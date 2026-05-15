@@ -27,10 +27,10 @@ body.chess-mode-open {
   inset: 68px 0 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(244, 247, 239, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244, 247, 239, 0.028) 1px, transparent 1px);
-  background-size: 78px 78px;
-  opacity: 0.26;
+    linear-gradient(rgba(244, 247, 239, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 247, 239, 0.042) 1px, transparent 1px);
+  background-size: 72px 72px;
+  opacity: 0.36;
   mask-image: radial-gradient(circle at 50% 44%, black 0 58%, transparent 84%);
 }
 
@@ -77,6 +77,27 @@ body.chess-mode-open {
   color: var(--text);
 }
 
+.chess-setup-panel::after,
+.chess-side-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(rgba(244, 247, 239, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 247, 239, 0.03) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.22;
+  mask-image: linear-gradient(180deg, black, transparent 90%);
+}
+
+.chess-setup-panel > *,
+.chess-side-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
 .chess-topbar {
   height: 68px;
   min-height: 68px;
@@ -95,14 +116,22 @@ body.chess-mode-open {
 .chess-topbar-brand {
   min-width: 0;
   text-align: left;
+  display: flex;
+  align-items: center;
 }
 
 .chess-topbar-actions {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   flex-wrap: wrap;
+}
+
+.chess-topbar-actions .btn-sm {
+  min-height: 36px;
+  padding: 0 13px;
+  font-size: 12px;
 }
 
 .chess-kicker,
@@ -115,18 +144,17 @@ body.chess-mode-open {
 }
 
 .chess-topbar .chess-kicker {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1;
-  margin-top: 2px;
+  display: none;
 }
 
-.chess-title {
-  font-family: 'Cruyff Sans Expanded', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
-  font-size: 24px;
-  line-height: 1;
-  text-transform: uppercase;
-  text-shadow: 0 0 24px rgba(33, 255, 114, 0.16);
+.chess-logo {
+  display: block;
+  width: clamp(270px, 27vw, 420px);
+  height: auto;
+  max-height: 58px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 0 18px rgba(33, 255, 114, 0.12));
 }
 
 .chess-setup {
@@ -135,33 +163,55 @@ body.chess-mode-open {
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 20px;
+  gap: 0;
   padding: 28px;
+}
+
+.chess-setup-top-actions {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chess-setup-top-actions .setup-top-btn {
+  min-height: 36px;
+  padding: 8px 13px;
+}
+
+.chess-setup-language-select {
+  position: static;
+  top: auto;
+  right: auto;
+  z-index: 500;
+  min-height: 36px;
 }
 
 .chess-setup-hero {
   text-align: center;
   text-transform: uppercase;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  margin-top: -64px;
+  margin-bottom: -64px;
 }
 
 .chess-setup-hero .chess-kicker {
-  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -52px;
 }
 
-.chess-setup-title {
-  font-family: 'Cruyff Sans Expanded', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
-  font-size: clamp(42px, 7vw, 84px);
-  line-height: .9;
-  color: var(--text);
-  text-shadow: 0 0 30px rgba(33, 255, 114, 0.16);
-}
-
-.chess-setup-title span:first-child {
-  color: var(--text);
-}
-
-.chess-setup-title span:last-child {
-  color: var(--accent);
+.chess-setup-logo {
+  display: block;
+  width: min(1040px, 88vw);
+  height: auto;
+  margin-top: -38px;
+  filter: drop-shadow(0 0 28px rgba(33, 255, 114, 0.16));
 }
 
 .chess-setup-panel {
@@ -234,6 +284,31 @@ body.chess-mode-open {
   z-index: 1;
   width: 100%;
   max-width: none;
+}
+
+.chess-continue-btn {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  padding: 14px 16px;
+  justify-self: stretch;
+  border-radius: 5px;
+  font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
+  font-size: 15px;
+  letter-spacing: .5px;
+  color: var(--text2);
+  background:
+    linear-gradient(180deg, rgba(244, 247, 239, 0.026), transparent 58%),
+    rgba(14, 20, 14, 0.78);
+  border: 1px solid rgba(244, 247, 239, 0.18);
+  box-shadow: none;
+}
+
+.chess-continue-btn:hover {
+  color: var(--accent);
+  border-color: rgba(33, 255, 114, 0.42);
+  background: rgba(33, 255, 114, 0.08);
 }
 
 .chess-manual-teams {
@@ -789,8 +864,9 @@ body.chess-mode-open {
     padding: 12px;
   }
 
-  .chess-title {
-    font-size: 28px;
+  .chess-logo {
+    width: min(330px, 78vw);
+    max-height: 52px;
   }
 
   .chess-battle-card {

@@ -108,6 +108,8 @@ window.FIFACONQUEST_LANGUAGE_PACKS['en'] = {
     "white_player":  "White player",
     "black_player":  "Black player",
     "start_chess":  "START CHESS",
+    "continue_chess":  "CONTINUE CHESS",
+    "continue_chess_date":  "CONTINUE CHESS - {date}",
     "turn":  "Turn",
     "chess_help":  "Move normally. When capturing, play FIFA until the first goal.",
     "captured_pieces":  "Captured Pieces",

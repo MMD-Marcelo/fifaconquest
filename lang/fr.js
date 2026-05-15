@@ -108,6 +108,8 @@ window.FIFACONQUEST_LANGUAGE_PACKS['fr'] = {
     "white_player":  "Joueur blanc",
     "black_player":  "Joueur noir",
     "start_chess":  "LANCER ECHECS",
+    "continue_chess":  "CONTINUER ECHECS",
+    "continue_chess_date":  "CONTINUER ECHECS - {date}",
     "turn":  "Tour",
     "chess_help":  "Deplacez normalement. Pour capturer, jouez FIFA jusqu'au premier but.",
     "captured_pieces":  "Pieces Capturees",
