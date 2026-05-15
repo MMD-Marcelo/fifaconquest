@@ -11,6 +11,7 @@
 <div class="setup-top-actions" id="setup-top-actions">
   <button class="setup-top-btn" type="button" onclick="triggerSaveImport()" data-i18n="load_short">CARREGAR</button>
   <button class="setup-top-btn" type="button" onclick="openChallengeModal()" data-i18n="challenge_short">DESAFIO</button>
+  <button class="setup-top-btn" type="button" onclick="openChessMode()" data-i18n="bonus_short">BÔNUS</button>
   <select class="language-select setup-language-select" id="language-select-setup" onchange="setLanguage(this.value)" aria-label="Language">
     <option value="pt">PT</option>
   </select>
@@ -84,6 +85,113 @@
     </div>
     <div class="challenge-grid" id="challenge-grid">
       <div class="challenge-empty" data-i18n="challenge_empty">Sorteie os desafios opcionais quando quiser.</div>
+    </div>
+  </div>
+</div>
+
+<!-- BONUS CHESS MODE -->
+<div id="chess-screen">
+  <div class="chess-shell">
+    <div class="chess-topbar">
+      <div class="chess-topbar-brand">
+        <div class="chess-title" data-i18n="chess_title">Xadrez FIFA</div>
+        <div class="chess-kicker" data-i18n="bonus_mode">Modo bônus</div>
+      </div>
+      <div class="chess-topbar-actions">
+        <button class="btn-sm" type="button" onclick="backToSetupFromChess()" data-i18n="back">VOLTAR</button>
+        <button class="btn-sm" type="button" onclick="resetChessMode()" data-i18n="restart">REINICIAR</button>
+      </div>
+    </div>
+
+    <div class="chess-setup" id="chess-setup">
+      <div class="chess-setup-hero">
+        <div class="chess-kicker" data-i18n="bonus_mode">Modo bônus</div>
+        <div class="chess-setup-title"><span data-i18n="chess_title_main">XADREZ</span><span>FC</span></div>
+      </div>
+      <div class="chess-setup-panel">
+        <div class="chess-section-title" data-i18n="configuration">Configuração</div>
+        <div class="chess-field-grid">
+          <label>
+            <span data-i18n="white_player">Jogador branco</span>
+            <input class="player-input" id="chess-white-name" value="Player 1">
+          </label>
+          <label>
+            <span data-i18n="black_player">Jogador preto</span>
+            <input class="player-input" id="chess-black-name" value="Player 2">
+          </label>
+        </div>
+        <div class="team-mode-row chess-mode-row">
+          <span class="seed-label" data-i18n="teams">Times</span>
+          <div class="team-mode-toggle">
+            <label class="team-mode-option">
+              <input type="radio" name="chess-team-mode" value="random" checked onchange="renderChessManualTeams()">
+              <span data-i18n="random">ALEATÓRIO</span>
+            </label>
+            <label class="team-mode-option">
+              <input type="radio" name="chess-team-mode" value="elite" onchange="renderChessManualTeams()">
+              <span data-i18n="elite_pool">ELITE CATIVA</span>
+            </label>
+            <label class="team-mode-option">
+              <input type="radio" name="chess-team-mode" value="manual" onchange="renderChessManualTeams()">
+              <span data-i18n="choose">ESCOLHER</span>
+            </label>
+          </div>
+        </div>
+        <div class="seed-row chess-seed-row">
+          <span class="seed-label">Seed</span>
+          <input type="text" class="seed-input" id="chess-seed-input" placeholder="ex: xadrez2026">
+        </div>
+        <div class="chess-manual-teams" id="chess-manual-teams"></div>
+        <button class="btn-start chess-start-btn" type="button" onclick="startChessMode()" data-i18n="start_chess">INICIAR XADREZ</button>
+      </div>
+    </div>
+
+    <div class="chess-game" id="chess-game">
+      <div class="chess-board-wrap">
+        <div class="chess-board" id="chess-board"></div>
+      </div>
+      <aside class="chess-side-panel">
+        <div class="chess-turn-card">
+          <div class="chess-section-title" data-i18n="turn">Turno</div>
+          <div class="chess-turn-player" id="chess-turn-player">-</div>
+          <div class="chess-help" data-i18n="chess_help">Movimente normalmente. Ao capturar, joguem no FIFA até sair o primeiro gol.</div>
+        </div>
+        <div class="chess-selected-card" id="chess-selected-card"></div>
+        <div class="chess-captured">
+          <div class="chess-section-title" data-i18n="captured_pieces">Peças Capturadas</div>
+          <div id="chess-captured-list"></div>
+        </div>
+        <div class="chess-stats-card">
+          <div class="chess-section-title" data-i18n="player">Jogador</div>
+          <div class="chess-player-toggle" id="chess-player-toggle"></div>
+          <div class="chess-player-stats" id="chess-player-stats"></div>
+        </div>
+        <div class="chess-log" id="chess-log"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div id="chess-battle-modal" class="chess-battle-modal">
+  <div class="battle-card chess-battle-card">
+    <div class="battle-title" data-i18n="fifa_capture">CAPTURA FIFA</div>
+    <div class="battle-matchup">
+      <div class="battle-team">
+        <div class="battle-team-name" id="chess-battle-attacker" style="color:var(--accent)"></div>
+        <div class="battle-team-country" id="chess-battle-attacker-piece"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" data-i18n="attacker">ATACANTE</div>
+      </div>
+      <div class="battle-vs">VS</div>
+      <div class="battle-team">
+        <div class="battle-team-name" id="chess-battle-defender" style="color:var(--accent2)"></div>
+        <div class="battle-team-country" id="chess-battle-defender-piece"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" data-i18n="defender">DEFENSOR</div>
+      </div>
+    </div>
+    <div class="battle-context" data-i18n="chess_suggested_rule">Regra sugerida: joguem até sair o primeiro gol.</div>
+    <div class="battle-result-btns">
+      <button class="btn-win" onclick="resolveChessBattle(true)" data-i18n="attacker_wins">ATACANTE VENCE</button>
+      <button class="btn-lose" onclick="resolveChessBattle(false)" data-i18n="defense_holds">DEFESA SEGURA</button>
     </div>
   </div>
 </div>
@@ -243,6 +351,7 @@
 <script src="js/map.js"></script>
 <script src="js/sidebar.js"></script>
 <script src="js/battle.js"></script>
+<script src="js/bonus-chess.js"></script>
 <script src="js/bootstrap.js"></script>
 </body>
 </html>

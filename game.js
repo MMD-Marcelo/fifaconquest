@@ -137,6 +137,10 @@ function applyTranslations() {
     renderDefenderTeamPicker();
     renderNeutralDefenderPicker();
   }
+  if (document.getElementById('chess-screen')?.classList.contains('active')) {
+    if (typeof renderChessManualTeams === 'function') renderChessManualTeams();
+    if (typeof renderChessMode === 'function') renderChessMode();
+  }
 }
 
 async function setLanguage(lang) {
@@ -766,6 +770,8 @@ function showScreen(which) {
   const setupTopActions = document.getElementById('setup-top-actions');
   if (setupLang) setupLang.style.display = which === 'setup' ? 'block' : 'none';
   if (setupTopActions) setupTopActions.style.display = which === 'setup' ? 'flex' : 'none';
+  document.getElementById('chess-screen')?.classList.toggle('active', which === 'chess');
+  document.body.classList.toggle('chess-mode-open', which === 'chess');
   const gs = document.getElementById('game-screen');
   gs.classList.toggle('active', which === 'game');
   if (which === 'setup') {
@@ -776,6 +782,7 @@ function showScreen(which) {
   } else {
     closeChallengeModal();
   }
+  if (which !== 'chess') document.getElementById('chess-battle-modal')?.classList.remove('active');
 }
 
 // ============================================================
