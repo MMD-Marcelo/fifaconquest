@@ -164,7 +164,7 @@ body.chess-mode-open {
   align-content: center;
   justify-items: center;
   gap: 0;
-  padding: 28px;
+  padding: 128px 28px 28px;
 }
 
 .chess-setup-top-actions {
@@ -191,31 +191,37 @@ body.chess-mode-open {
 }
 
 .chess-setup-hero {
+  position: absolute;
+  z-index: 0;
+  top: clamp(44px, 6vh, 70px);
+  left: 50%;
+  width: min(315px, 34vw);
+  transform: translateX(-50%);
   text-align: center;
   text-transform: uppercase;
   display: grid;
   justify-items: center;
   gap: 0;
-  margin-top: -64px;
-  margin-bottom: -64px;
+  margin: 0;
 }
 
 .chess-setup-hero .chess-kicker {
-  position: relative;
-  z-index: 1;
-  margin-bottom: -52px;
+  display: none;
 }
 
 .chess-setup-logo {
   display: block;
-  width: min(1040px, 88vw);
+  width: 100%;
+  max-height: 90px;
   height: auto;
-  margin-top: -38px;
-  filter: drop-shadow(0 0 28px rgba(33, 255, 114, 0.16));
+  object-fit: contain;
+  margin: 0 auto;
+  filter: none;
 }
 
 .chess-setup-panel {
-  width: min(980px, 94vw);
+  width: 520px;
+  max-width: 90vw;
   position: relative;
   overflow: hidden;
   padding: 22px;
