@@ -841,8 +841,12 @@ function getAttackableLabelIds() {
 
 function getLabelVisibilityKey() {
   const current = currentPlayerObj();
+  const viewportKey = mapTransform.scale >= 2.1
+    ? `${Math.round(mapTransform.x / 160)}:${Math.round(mapTransform.y / 160)}:${Math.round(mapTransform.scale * 10)}`
+    : 'wide';
   return [
     getLabelZoomBucket(),
+    viewportKey,
     G.selectedCountry || '',
     G.attackTarget || '',
     G.currentPlayer,
@@ -874,8 +878,26 @@ function updateLabelVisibilityForZoom(force = false) {
   });
 }
 
+function isLabelNearViewport(id) {
+  if (mapTransform.scale < 2.1) return true;
+  const container = document.getElementById('map-container');
+  const pos = mapLabelPositions[id];
+  if (!container || !pos) return true;
+  const rect = container.getBoundingClientRect();
+  const baseX = (pos[0] / MAP_WIDTH) * rect.width;
+  const baseY = (pos[1] / MAP_HEIGHT) * rect.height;
+  const screenX = (rect.width / 2) + mapTransform.x + (mapTransform.scale * (baseX - (rect.width / 2)));
+  const screenY = (rect.height / 2) + mapTransform.y + (mapTransform.scale * (baseY - (rect.height / 2)));
+  const padding = 180;
+  return screenX >= -padding
+    && screenX <= rect.width + padding
+    && screenY >= -padding
+    && screenY <= rect.height + padding;
+}
+
 function shouldShowTeamLabel(id) {
   if (!teamLabelsVisible || !id) return false;
+  if (!isLabelNearViewport(id)) return false;
   if (mapTransform.scale >= 3.1) return true;
   if (G.selectedCountry === id || G.attackTarget === id || G.homeOf[id]) return true;
   const terr = G.territories?.[id];

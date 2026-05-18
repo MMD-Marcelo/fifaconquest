@@ -210,17 +210,15 @@
   font-size: var(--label-font-size, 9px);
   font-weight: 700;
   fill: #172033;
-  opacity: 0;
+  display: none;
   pointer-events: none;
   text-anchor: middle;
   dominant-baseline: middle;
   letter-spacing: 0;
-  transition: opacity 0.16s;
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
 }
 
 .country-label.is-visible {
-  opacity: 1;
+  display: block;
 }
 
 

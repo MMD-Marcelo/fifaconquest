@@ -515,25 +515,27 @@ body * {
 
 .country-path.home {
   stroke: var(--accent3) !important;
-  filter: drop-shadow(0 0 6px rgba(223, 255, 41, 0.32));
 }
 
 .country-path.selected {
   stroke: var(--accent) !important;
-  filter: drop-shadow(0 0 8px rgba(33, 255, 114, 0.42)) brightness(1.16);
+  filter: brightness(1.16);
 }
 
 .country-path.attackable,
 .country-path.preview-attackable {
   stroke: var(--accent3) !important;
-  filter: drop-shadow(0 0 8px rgba(223, 255, 41, 0.42));
+  filter: brightness(0.82);
 }
 
 .country-path.sea-attackable,
 .sea-route-line,
 .sea-route-dot {
   stroke: var(--accent) !important;
-  filter: drop-shadow(0 0 6px rgba(33, 255, 114, 0.58));
+}
+
+.country-path.sea-attackable {
+  filter: brightness(0.82);
 }
 
 .sea-route-line {
@@ -845,14 +847,13 @@ body * {
 .country-label {
   font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
   fill: var(--text);
-  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.94)) drop-shadow(0 0 8px rgba(33, 255, 114, 0.32));
 }
 
 #world-svg.is-transforming .country-path,
 #world-svg.is-transforming .country-label,
 #world-svg.is-transforming .sea-route-line,
 #world-svg.is-transforming .sea-route-dot {
-  filter: none !important;
+  transition: none !important;
 }
 
 #world-svg.is-transforming .country-path {

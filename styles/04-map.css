@@ -4,12 +4,14 @@
   position: relative;
   overflow: hidden;
   background: var(--map-water);
+  contain: layout paint;
 }
 
 #world-svg {
   width: 100%;
   height: 100%;
   cursor: grab;
+  transform-origin: center center;
 }
 
 #world-svg:active {
@@ -22,6 +24,13 @@
   vector-effect: non-scaling-stroke;
   transition: fill .22s ease, stroke .22s ease, stroke-width .15s ease, filter .22s ease;
   cursor: pointer;
+}
+
+#world-svg.is-transforming .country-path,
+#world-svg.is-transforming .country-label,
+#world-svg.is-transforming .sea-route-line,
+#world-svg.is-transforming .sea-route-dot {
+  transition: none !important;
 }
 
 .country-path:hover {
@@ -56,40 +65,42 @@
 
 .country-path.home {
   stroke: var(--home-color) !important;
-  stroke-width: 0.8px !important;
+  stroke-width: 0.3px !important;
   vector-effect: non-scaling-stroke;
 }
 
 .country-path.selected {
   stroke: #fff !important;
-  stroke-width: 1px !important;
+  stroke-width: 0.3px !important;
   filter: brightness(1.3);
   vector-effect: non-scaling-stroke;
 }
 
 .country-path.attackable {
   stroke: var(--accent3) !important;
-  stroke-width: 0.7px !important;
+  stroke-width: 0.3px !important;
+  filter: brightness(0.82);
   animation: pulse-border 1s ease-in-out infinite;
   vector-effect: non-scaling-stroke;
 }
 
 .country-path.preview-source {
   stroke: rgba(255, 255, 255, 0.96) !important;
-  stroke-width: 1px !important;
+  stroke-width: 0.3px !important;
   filter: brightness(1.12);
 }
 
 .country-path.preview-attackable {
   stroke: rgba(255, 159, 10, 0.72) !important;
-  stroke-width: 0.65px !important;
+  stroke-width: 0.3px !important;
+  filter: brightness(0.82);
   vector-effect: non-scaling-stroke;
 }
 
 .country-path.sea-attackable {
   stroke: #007aff !important;
-  stroke-width: 1.7px !important;
-  filter: drop-shadow(0 0 8px rgba(0, 122, 255, 0.85)) brightness(1.08);
+  stroke-width: 0.3px !important;
+  filter: brightness(0.82);
 }
 
 .sea-route-line {
@@ -101,7 +112,6 @@
   vector-effect: non-scaling-stroke;
   pointer-events: none;
   animation: sea-route-flow 1.8s linear infinite;
-  filter: drop-shadow(0 0 7px rgba(0, 122, 255, 0.9));
 }
 
 .sea-route-dot {
@@ -110,7 +120,6 @@
   stroke-width: 1px;
   vector-effect: non-scaling-stroke;
   pointer-events: none;
-  filter: drop-shadow(0 0 7px rgba(0, 122, 255, 0.9));
 }
 
 .sea-route-start {
