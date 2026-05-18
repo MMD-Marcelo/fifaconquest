@@ -294,14 +294,33 @@ function resolveBattle(result) {
 function getSwappableTerritories(playerId) {
   const pl = G.players.find(p => p.id === playerId);
   if (!pl) return [];
-  return pl.territories
-    .filter(id => G.territories[id]?.team)
-    .map(id => ({
+  return pl.territories.flatMap(id => {
+    const isHome = G.homeOf[id] === playerId;
+    const country = COUNTRY_BY_ID.get(id)?.name || id;
+    if (isHome) {
+      return (G.homeTeams[id] || [])
+        .filter(Boolean)
+        .map((team, index) => ({
+          key: `home:${id}:${index}`,
+          id,
+          country,
+          team,
+          isHome,
+          homeIndex: index
+        }));
+    }
+
+    const team = G.territories[id]?.team;
+    if (!team) return [];
+    return [{
+      key: `territory:${id}`,
       id,
-      country: COUNTRY_BY_ID.get(id)?.name || id,
-      team: G.territories[id].team,
-      isHome: G.homeOf[id] === playerId
-    }));
+      country,
+      team,
+      isHome,
+      homeIndex: -1
+    }];
+  });
 }
 
 function maybeShowSwapReward(pl) {
@@ -336,10 +355,10 @@ function renderSwapModal(options = null) {
   const data = options || getSwappableTerritories(pl.id);
 
   list.innerHTML = data.map(item => {
-    const selected = G.swapSelection.includes(item.id);
+    const selected = G.swapSelection.includes(item.key);
     return `
-      <button class="swap-option ${selected ? 'selected' : ''}" onclick="toggleSwapSelection('${item.id}')">
-        <span class="swap-country">${item.country}${item.isHome ? ' Base' : ''}</span>
+      <button class="swap-option ${selected ? 'selected' : ''}" onclick="toggleSwapSelection('${item.key}')">
+        <span class="swap-country">${item.country}${item.isHome ? ` Base ${item.homeIndex + 1}` : ''}</span>
         <span class="swap-team">${item.team}</span>
       </button>
     `;
@@ -365,21 +384,19 @@ function skipSwapReward() {
 
 function confirmSwapReward() {
   if (G.swapSelection.length !== 2) return;
-  const [a, b] = G.swapSelection;
-  const terrA = G.territories[a];
-  const terrB = G.territories[b];
-  if (!terrA || !terrB) return;
+  const options = getSwappableTerritories(currentPlayerObj()?.id);
+  const slotA = options.find(item => item.key === G.swapSelection[0]);
+  const slotB = options.find(item => item.key === G.swapSelection[1]);
+  if (!slotA || !slotB) return;
 
-  const oldTeamA = terrA.team;
-  const oldTeamB = terrB.team;
-  terrA.team = oldTeamB;
-  terrB.team = oldTeamA;
-  syncHomeTeamAfterSwap(a, oldTeamA, oldTeamB);
-  syncHomeTeamAfterSwap(b, oldTeamB, oldTeamA);
+  const oldTeamA = slotA.team;
+  const oldTeamB = slotB.team;
+  setSwapSlotTeam(slotA, oldTeamB);
+  setSwapSlotTeam(slotB, oldTeamA);
 
-  const countryA = COUNTRY_BY_ID.get(a)?.name || a;
-  const countryB = COUNTRY_BY_ID.get(b)?.name || b;
-  addLog('TROCA', `<span style="color:${currentPlayerObj().color}">${currentPlayerObj().name}</span> trocou os times entre <strong>${countryA}</strong> e <strong>${countryB}</strong>.`);
+  const labelA = `${slotA.country}${slotA.isHome ? ` Base ${slotA.homeIndex + 1}` : ''}`;
+  const labelB = `${slotB.country}${slotB.isHome ? ` Base ${slotB.homeIndex + 1}` : ''}`;
+  addLog('TROCA', `<span style="color:${currentPlayerObj().color}">${currentPlayerObj().name}</span> trocou <strong>${oldTeamA}</strong> (${labelA}) com <strong>${oldTeamB}</strong> (${labelB}).`);
 
   G.swapRewardAvailable = false;
   skipSwapReward();
@@ -387,6 +404,22 @@ function confirmSwapReward() {
   renderSidebar();
   updateSwapRewardButton();
   saveGameState();
+}
+
+function setSwapSlotTeam(slot, team) {
+  if (!slot) return;
+  if (slot.isHome) {
+    const homeTeams = G.homeTeams[slot.id];
+    if (!homeTeams || slot.homeIndex < 0) return;
+    homeTeams[slot.homeIndex] = team;
+    const owner = G.homeOf[slot.id];
+    const pl = owner ? G.players.find(p => p.id === owner) : null;
+    if (pl) pl.teams = [...homeTeams];
+    if (G.territories[slot.id]) G.territories[slot.id].team = homeTeams[0] || team;
+    return;
+  }
+
+  if (G.territories[slot.id]) G.territories[slot.id].team = team;
 }
 
 function syncHomeTeamAfterSwap(countryId, oldTeam, newTeam) {

@@ -202,6 +202,28 @@ function geometryToPath(geometry) {
   }).join(' ')).join(' ');
 }
 
+function getCountryLabelLines(id) {
+  const homeTeams = G.homeOf?.[id] ? (G.homeTeams?.[id] || []).filter(Boolean) : null;
+  if (homeTeams?.length) return homeTeams;
+  const terr = G.territories?.[id];
+  const country = COUNTRY_BY_ID.get(id);
+  return [terr?.team || country?.name || id];
+}
+
+function setCountryLabelLines(textEl, id) {
+  if (!textEl) return;
+  const lines = getCountryLabelLines(id);
+  const x = textEl.getAttribute('x') || '0';
+  textEl.replaceChildren();
+  lines.forEach((line, index) => {
+    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+    tspan.setAttribute('x', x);
+    tspan.setAttribute('dy', index === 0 ? `${((lines.length - 1) * -0.55).toFixed(2)}em` : '1.1em');
+    tspan.textContent = line;
+    textEl.appendChild(tspan);
+  });
+}
+
 function geometryBounds(geometry) {
   const pts = geometry.coordinates.flat(2);
   const xs = pts.map(p => p[0]);
@@ -448,8 +470,7 @@ function createWorldSVG() {
     text.setAttribute('y', cy.toFixed(1));
     text.setAttribute('class', 'country-label');
     text.setAttribute('data-id', gameId);
-    const team = terr.team || '';
-    text.textContent = team || country.name;
+    setCountryLabelLines(text, gameId);
     labelGroup.appendChild(text);
     mapLabelElements.push(text);
   });
@@ -914,13 +935,7 @@ function updateTeamLabels() {
   updateLabelScale();
   mapLabelElements.forEach(l => {
     const id = l.dataset.id;
-    const terr = G.territories ? G.territories[id] : null;
-    const country = COUNTRY_BY_ID.get(id);
-    if (terr) {
-      const team = terr.team || '';
-      const nextText = team || (country?.name || '');
-      if (l.textContent !== nextText) l.textContent = nextText;
-    }
+    if (G.territories?.[id]) setCountryLabelLines(l, id);
   });
   updateLabelVisibilityForZoom(true);
 }
