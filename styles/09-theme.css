@@ -528,6 +528,16 @@ body * {
   filter: brightness(0.82);
 }
 
+.country-path.sea-preview-source {
+  stroke: rgba(236, 255, 230, 0.48) !important;
+  filter: grayscale(0.55) brightness(1.12);
+}
+
+.country-path.sea-preview-target {
+  stroke: rgba(209, 220, 210, 0.62) !important;
+  filter: grayscale(0.7) brightness(0.84);
+}
+
 .country-path.sea-attackable,
 .sea-route-line,
 .sea-route-dot {
@@ -539,11 +549,20 @@ body * {
 }
 
 .sea-route-line {
-  stroke-dasharray: 10 10;
+  stroke-dasharray: 6 7;
+}
+
+.sea-route-line.sea-route-info {
+  stroke: rgba(209, 220, 210, 0.64) !important;
 }
 
 .sea-route-dot {
   fill: var(--accent);
+}
+
+.sea-route-dot.sea-route-info {
+  fill: rgba(209, 220, 210, 0.7);
+  stroke: rgba(9, 14, 9, 0.55) !important;
 }
 
 #map-tooltip {
@@ -847,6 +866,10 @@ body * {
 .country-label {
   font-family: 'Cruyff Sans Condensed', 'Cruyff Sans', Helvetica, Arial, sans-serif !important;
   fill: var(--text);
+}
+
+.country-label.has-port {
+  font-style: italic;
 }
 
 #world-svg.is-transforming .country-path,

@@ -469,6 +469,7 @@ function createWorldSVG() {
     text.setAttribute('x', cx.toFixed(1));
     text.setAttribute('y', cy.toFixed(1));
     text.setAttribute('class', 'country-label');
+    if (hasPort(gameId)) text.classList.add('has-port');
     text.setAttribute('data-id', gameId);
     setCountryLabelLines(text, gameId);
     labelGroup.appendChild(text);
@@ -479,12 +480,17 @@ function createWorldSVG() {
   return svg;
 }
 
+function hasPort(id) {
+  return !!OCEAN_ROUTES[id]?.length;
+}
+
 function updateMapColors() {
   // Update country labels text (team may have changed)
   updateTeamLabels();
   const highlightSource = getMapHighlightSource();
   const selectedAttackable = G.selectedCountry ? getAttackableIdsFrom(G.selectedCountry) : null;
   const previewAttackable = !G.selectedCountry && highlightSource ? getAttackableIdsFrom(highlightSource) : null;
+  const seaInfoTargets = hoverSeaPreviewCountry ? new Set(OCEAN_ROUTES[hoverSeaPreviewCountry] || []) : null;
   mapPathElements.forEach(path => {
     const id = path.dataset.id;
     const terr = G.territories[id];
@@ -501,6 +507,8 @@ function updateMapColors() {
     if (G.homeOf[id]) path.classList.add('home');
     if (G.selectedCountry === id) path.classList.add('selected');
     if (!G.selectedCountry && hoverPreviewCountry === id) path.classList.add('preview-source');
+    if (!G.selectedCountry && hoverSeaPreviewCountry === id) path.classList.add('sea-preview-source');
+    if (!G.selectedCountry && seaInfoTargets?.has(id)) path.classList.add('sea-preview-target');
     if (selectedAttackable?.has(id)) {
       path.classList.add('attackable');
       if (getSeaRouteSegmentForAttack(G.selectedCountry, id)) path.classList.add('sea-attackable');
@@ -526,8 +534,11 @@ function getMapHighlightSource() {
 function updateHoverPreview(id) {
   const pl = currentPlayerObj();
   const next = id && G.territories[id]?.owner === pl?.id ? id : null;
-  if (hoverPreviewCountry === next) return;
+  const terr = id ? G.territories[id] : null;
+  const nextSea = id && !G.selectedCountry && terr && !terr.owner && hasPort(id) ? id : null;
+  if (hoverPreviewCountry === next && hoverSeaPreviewCountry === nextSea) return;
   hoverPreviewCountry = next;
+  hoverSeaPreviewCountry = nextSea;
   if (!G.selectedCountry) updateMapColors();
 }
 
@@ -563,6 +574,13 @@ function getSeaRouteSegmentsForSource(fromId) {
     });
 }
 
+function getSeaRouteSegmentsForInfoSource(fromId) {
+  if (!fromId) return [];
+  return (OCEAN_ROUTES[fromId] || [])
+    .filter(toId => COUNTRY_ID_SET.has(toId))
+    .map(toId => [fromId, toId]);
+}
+
 function makeSeaCurvePath(from, to) {
   const dx = to[0] - from[0];
   const dy = to[1] - from[1];
@@ -577,36 +595,59 @@ function makeSeaCurvePath(from, to) {
   return `M${from[0].toFixed(1)} ${from[1].toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${to[0].toFixed(1)} ${to[1].toFixed(1)}`;
 }
 
+function updateSeaRouteScale() {
+  const layer = document.getElementById('sea-route-layer');
+  if (!layer) return;
+  const scale = Math.max(0.5, mapTransform.scale || 1);
+  const stroke = (1.25 / scale).toFixed(3);
+  const dash = (6 / scale).toFixed(3);
+  const gap = (7 / scale).toFixed(3);
+  const cycle = ((6 + 7) / scale).toFixed(3);
+  layer.querySelectorAll('.sea-route-line').forEach(path => {
+    path.style.strokeWidth = `${stroke}px`;
+    path.style.strokeDasharray = `${dash}px ${gap}px`;
+    path.style.setProperty('--sea-route-cycle', `${cycle}px`);
+  });
+  layer.querySelectorAll('.sea-route-dot').forEach(dot => {
+    const baseRadius = dot.classList.contains('sea-route-start') ? 2.2 : 2.7;
+    dot.setAttribute('r', (baseRadius / scale).toFixed(3));
+    dot.style.strokeWidth = `${(0.7 / scale).toFixed(3)}px`;
+  });
+}
+
 function updateSeaRouteHighlights() {
   const layer = document.getElementById('sea-route-layer');
   if (!layer) return;
   layer.innerHTML = '';
   const source = getMapHighlightSource();
-  if (!source) return;
+  const infoSource = !source && hoverSeaPreviewCountry;
+  if (!source && !infoSource) return;
+  const segments = source
+    ? getSeaRouteSegmentsForSource(source).map(segment => ({ segment, isInfo: false }))
+    : getSeaRouteSegmentsForInfoSource(infoSource).map(segment => ({ segment, isInfo: true }));
 
-  getSeaRouteSegmentsForSource(source).forEach(([fromId, toId]) => {
+  segments.forEach(({ segment: [fromId, toId], isInfo }) => {
     const from = mapLabelPositions[fromId];
     const to = mapLabelPositions[toId];
     if (!from || !to) return;
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('class', 'sea-route-line');
+    path.setAttribute('class', `sea-route-line${isInfo ? ' sea-route-info' : ''}`);
     path.setAttribute('d', makeSeaCurvePath(from, to));
     layer.appendChild(path);
 
     const start = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    start.setAttribute('class', 'sea-route-dot sea-route-start');
+    start.setAttribute('class', `sea-route-dot sea-route-start${isInfo ? ' sea-route-info' : ''}`);
     start.setAttribute('cx', from[0].toFixed(1));
     start.setAttribute('cy', from[1].toFixed(1));
-    start.setAttribute('r', '2.6');
     layer.appendChild(start);
 
     const end = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    end.setAttribute('class', 'sea-route-dot');
+    end.setAttribute('class', `sea-route-dot${isInfo ? ' sea-route-info' : ''}`);
     end.setAttribute('cx', to[0].toFixed(1));
     end.setAttribute('cy', to[1].toFixed(1));
-    end.setAttribute('r', '3.2');
     layer.appendChild(end);
   });
+  updateSeaRouteScale();
 }
 
 // ============================================================
@@ -674,7 +715,10 @@ let isDragging = false;
 let dragStart = { x: 0, y: 0 };
 let mapWindowHandlers = null;
 let hoverPreviewCountry = null;
+let hoverSeaPreviewCountry = null;
 let lastMapPointer = null;
+let mapPointerDown = null;
+let mapDidDrag = false;
 let mapTransformSettleTimer = null;
 let queuedZoom = null;
 let queuedZoomFrame = null;
@@ -697,6 +741,8 @@ function initMapPanZoom(svg) {
 
   svg.addEventListener('mousedown', e => {
     lastMapPointer = getMapPointerFromEvent(e);
+    mapPointerDown = { x: e.clientX, y: e.clientY };
+    mapDidDrag = false;
     if (e.target.classList.contains('country-path')) return;
     isDragging = true;
     dragStart = { x: e.clientX - mapTransform.x, y: e.clientY - mapTransform.y };
@@ -710,6 +756,9 @@ function initMapPanZoom(svg) {
     move: e => {
       if (!isDragging) return;
       lastMapPointer = getMapPointerFromEvent(e);
+      if (mapPointerDown && Math.hypot(e.clientX - mapPointerDown.x, e.clientY - mapPointerDown.y) > 4) {
+        mapDidDrag = true;
+      }
       mapTransform.x = e.clientX - dragStart.x;
       mapTransform.y = e.clientY - dragStart.y;
       applyMapTransform(svg);
@@ -723,11 +772,28 @@ function initMapPanZoom(svg) {
 
   window.addEventListener('mousemove', mapWindowHandlers.move);
   window.addEventListener('mouseup', mapWindowHandlers.up);
+  svg.addEventListener('click', e => {
+    if (e.target.classList.contains('country-path')) return;
+    if (mapDidDrag) return;
+    deselectMapAttack();
+  });
   svg.addEventListener('wheel', e => {
     e.preventDefault();
     const factor = e.deltaY < 0 ? 1.1 : 0.9;
     queueMapZoom(factor, getMapPointerFromEvent(e));
   }, { passive: false });
+}
+
+function deselectMapAttack() {
+  if (!G.selectedCountry && !G.attackTarget && !G.selectedAttackTeam && !G.selectedAttackFrom) return;
+  G.selectedCountry = null;
+  G.attackTarget = null;
+  G.selectedAttackTeam = null;
+  G.selectedAttackFrom = null;
+  updateMapColors();
+  renderSidebar();
+  switchTab('map');
+  saveGameState();
 }
 
 function queueMapZoom(factor, anchor) {
@@ -757,6 +823,7 @@ function applyMapTransform(svg) {
   }, 120);
   svg.style.transform = `translate(${mapTransform.x}px, ${mapTransform.y}px) scale(${mapTransform.scale})`;
   svg.style.transformOrigin = 'center center';
+  updateSeaRouteScale();
   updateLabelVisibilityForZoom();
   return;
   // Show/hide labels based on zoom - scale font inversely to CSS transform

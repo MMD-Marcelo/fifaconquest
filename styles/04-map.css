@@ -97,6 +97,18 @@
   vector-effect: non-scaling-stroke;
 }
 
+.country-path.sea-preview-source {
+  stroke: rgba(255, 255, 255, 0.55) !important;
+  stroke-width: 0.3px !important;
+  filter: grayscale(0.45) brightness(1.12);
+}
+
+.country-path.sea-preview-target {
+  stroke: rgba(210, 218, 226, 0.62) !important;
+  stroke-width: 0.3px !important;
+  filter: grayscale(0.6) brightness(0.82);
+}
+
 .country-path.sea-attackable {
   stroke: #007aff !important;
   stroke-width: 0.3px !important;
@@ -106,20 +118,31 @@
 .sea-route-line {
   fill: none;
   stroke: rgba(0, 122, 255, 0.95);
-  stroke-width: 2px;
+  stroke-width: 1.25px;
   stroke-linecap: round;
-  stroke-dasharray: 10 10;
+  stroke-dasharray: 6 7;
+  --sea-route-cycle: 13px;
   vector-effect: non-scaling-stroke;
   pointer-events: none;
   animation: sea-route-flow 1.8s linear infinite;
 }
 
+.sea-route-line.sea-route-info {
+  stroke: rgba(215, 222, 230, 0.66);
+  animation-duration: 2.6s;
+}
+
 .sea-route-dot {
   fill: #007aff;
   stroke: rgba(255, 255, 255, 0.9);
-  stroke-width: 1px;
+  stroke-width: 0.7px;
   vector-effect: non-scaling-stroke;
   pointer-events: none;
+}
+
+.sea-route-dot.sea-route-info {
+  fill: rgba(215, 222, 230, 0.72);
+  stroke: rgba(28, 35, 42, 0.46);
 }
 
 .sea-route-start {
@@ -128,7 +151,7 @@
 
 @keyframes sea-route-flow {
   to {
-    stroke-dashoffset: -20;
+    stroke-dashoffset: calc(var(--sea-route-cycle, 13px) * -1);
   }
 }
 
