@@ -221,6 +221,10 @@
   display: block;
 }
 
+.country-label.has-port {
+  font-style: italic;
+}
+
 
 /* Stats panel */
 .stat-block {

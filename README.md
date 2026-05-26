@@ -1,28 +1,101 @@
-# FIFA Conquest
+# FIFACONQUEST
 
-FIFA Conquest is a couch-style football strategy game. You pick players, get teams, fight over a world map, and settle battles by playing FIFA/EA FC matches in real life.
+FIFACONQUEST is a companion app for a game mode that me and my friends have been playing for some time.
 
-The idea is simple: the browser handles the territory game, the football game handles the drama.
+If i remember correctly, one of my friends saw a FIFA youtube video where a guy was conquering a map. That video was also based on another guy doing something like this in an NFL or NBA game, i dont remember exactly. Then we started playing it, and as time went on we kept changing rules, adding stuff, removing stuff, and making it more of our own thing.
 
-## What you can play
+This app is basically the board that keeps everything together. It was coded by AI with my assistance. I will not lie and say i coded everything myself like everyone that "vibecode" an app and suddenly acts like a software company. This is not for work, i dont intend on making money from it, and it is not some insane revolutionary thing either. Anyone could probably make something similar in a few hours if they really wanted to.
 
-### World Conquest
+It is just a fun thing for a very specific stupid game we like playing.
 
-The main mode is a Risk-like world map. Each player starts with a base country and a few base teams. On your turn, you attack connected territories, choose one of your available teams, and play the FIFA match outside the app.
+## The Idea
 
-After the match, enter the result:
+The idea is simple.
 
-- Victory: you conquer the territory.
-- Draw: the attack does not go through.
-- Defeat: the defender holds.
+You choose the number of players. The game works best with 4 people. 3 is cool as well. We never really played with 5, but the option is there, so try it for yourselves.
 
-There are also optional challenge cards, saves, match history, stats, neutral defenses, revives, and a swap bonus for hot streaks.
+Each player gets a random country base. You can play with random teams, or manually choose your 3 teams that will be tied to your base. There is also an elite mode where the top 5 leagues are all in the map, and a random mode where it is basically any team from the database.
 
-### Bonus Mode: FIFA Chess
+The teams database was made using some freaky ass site, so there are probably things wrong there. Not every team is in the database. Some teams may be outdated. Some league names may be weird. You can change it pretty easily in the codebase. If you use mods, lets say a Brazilian league mod or something like that, you can add the teams in `teams.js` and it should work if you follow the same format.
 
-FIFA Chess is a smaller side mode for two players.
+## How The World Conquest Works
 
-It plays like normal chess, but every chess piece has a football team attached to it. When a piece tries to capture another piece, both players play FIFA/EA FC to decide if the capture really happens.
+You attack territories on the map.
+
+You can attack:
+
+- a territory adjacent to yours;
+- a territory connected by a naval route;
+- whatever else you decide if you want to make house rules.
+
+When you attack, the game is played in FIFA / EA FC outside the app. The app does not play for you, it just tracks the results.
+
+You can make any FIFA rule you want:
+
+- first to score;
+- normal match;
+- golden goal;
+- 3 goal difference ends the game;
+- whatever cursed thing your group enjoys.
+
+If the attacker wins, they take the territory.
+
+If the attacker loses, they lose the territory they attacked from.
+
+If the attacker used their initial base and loses, they lose the team they attacked with and one life. If you lose all 3 base teams, you are out of the game.
+
+But you can come back. In our rules, eliminated players can return if they win 3 territory defenses as a neutral/NPC defender.
+
+## Winning Streaks And Turn Order
+
+If you keep winning, you can keep going.
+
+After winning 3 attacks in a row, you can swap the place of one of your teams on the board with another one of your teams.
+
+The player defending should always rotate. Example in a 4 player game:
+
+```txt
+P1 attacks P2
+P1 attacks P3
+P1 attacks P4
+then it loops
+```
+
+If P1 loses to P3, then when P3 starts attacking, P3 would play against P4, then P1, then P2.
+
+This is just how we do it. Most of the rules in here are just things we found out worked after playing. You can play however you want.
+
+There is also a pass turn button. So if your group does not like one guy winning forever, you can make a rule that forces turns to pass.
+
+One PUSSY ass rule is: in the first 3 turns, each player can only attack once, then must pass even if they win. I personally think this is weak, but do whatever makes your friends not cry.
+
+## Challenge Cards
+
+There are challenge cards in the menu.
+
+This was a friend's idea. It is kinda cool, but it can also be unfair depending on the cards and your group.
+
+You can edit the challenge card files in the `desafios/` folder and make the challenges fit your own group.
+
+The files are split by language:
+
+- `desafios/pt.js`
+- `desafios/en.js`
+- `desafios/es.js`
+- `desafios/fr.js`
+- `desafios/it.js`
+
+Like a board game, things are still tracked by the players. So remember: this is a gentleman game. Dont cheat your buddies. They are your buddies.
+
+It is fun to win, and it is also fun to want to hurt yourself when you lose in the dumbest possible way. Dont cheat, dont throw games, have fun.
+
+## FIFA Chess
+
+FIFA Chess is the same spirit but with chess.
+
+I think it is cooler than playing normal conquest with only 2 people. We usually play this with a real chess board, but the virtual board helps keeping track of the teams and captures.
+
+Every chess piece has a football team. When a piece attacks another piece, you play FIFA to decide if the capture actually happens.
 
 Suggested rule:
 
@@ -34,142 +107,77 @@ Suggested rule:
 
 You can use random teams, the locked elite pool, or manually choose the team for every chess piece.
 
-## How to run it
+## Running The App
 
-### Option 1: open the HTML
-
-The chill way:
+The easiest way is just opening the HTML file.
 
 1. Download or clone the repo.
 2. Open `fifa-world-domination.html` in a modern browser.
 3. Play.
 
-This works because the app is plain HTML, CSS and JavaScript.
+It is just HTML, CSS and JavaScript.
 
-### Option 2: run the Electron app
+Its very lazy and dumb, but it works.
 
-Install dependencies:
+If you want the Electron version:
 
 ```bash
 npm install
-```
-
-Run the desktop version:
-
-```bash
 npm start
 ```
 
-### Option 3: build the Windows executable
-
-Build the portable Windows app:
+If you want to build the Windows portable app:
 
 ```bash
 npm run build
 ```
 
-The build output is created by `electron-builder`. The current config builds a portable Windows executable.
+If there is a release build on GitHub, just download the `.exe`. That is easier if you dont want to mess with Node, npm, terminal stuff, all that.
 
-### Option 4: download a release build
+## Editing Stuff
 
-When builds are published, grab the `.exe` from the GitHub Releases page. That is the easiest option for people who just want to play and not mess with Node, npm, terminals, all that stuff.
+Most things are data files.
 
-## Editing the database
-
-Most of the fun stuff is just data files. You can tweak a lot without touching the game logic.
-
-### Teams
-
-Edit `teams.js`.
-
-That file controls:
-
-- Team names
-- Team leagues
-- The full available team pool
-- Which teams can appear in random drafts
-
-Keep team names consistent. If you rename a team in one place, make sure any league mapping or references use the same exact text.
-
-### Elite pool
-
-The locked elite behavior is controlled in the JavaScript data and mode logic. Search for:
+Teams are in:
 
 ```txt
-TEAM_POOL_MODES
-ELITE
-ELITE_LOCKED_LEAGUES
+teams.js
 ```
 
-That is where you tune what counts as the stronger curated pool.
-
-### Countries and map data
-
-The map and territory data live mainly in:
-
-- `map-data.js`
-- `data/world-geojson.js`
-
-Use these if you want to adjust country IDs, names, neighbors, geometry, or map behavior.
-
-Heads up: country IDs are used by saves and game state, so changing IDs can break old saves.
-
-### Challenge cards
-
-Challenge cards are in the `desafios/` folder.
-
-Each language has its own file:
-
-- `desafios/pt.js`
-- `desafios/en.js`
-- `desafios/es.js`
-- `desafios/fr.js`
-- `desafios/it.js`
-
-To add cards, edit the matching language file. Keep the structure the same and add new cards to the list.
-
-### Languages
-
-Language packs are in `lang/`.
-
-Current languages:
-
-- Portuguese: `lang/pt.js`
-- English: `lang/en.js`
-- Spanish: `lang/es.js`
-- French: `lang/fr.js`
-- Italian: `lang/it.js`
-
-The available language list is controlled by:
+Countries and map rules are mostly in:
 
 ```txt
-lang/manifest.js
+map-data.js
+data/world-geojson.js
 ```
 
-To add a new language:
+Languages are in:
 
-1. Copy one existing language file.
-2. Rename it, for example `lang/de.js`.
-3. Change the language code inside the file.
-4. Translate the keys.
-5. Add it to `lang/manifest.js`.
-6. Add challenge cards for that language in `desafios/` if you want challenge mode fully translated too.
+```txt
+lang/
+```
+
+Challenge cards are in:
+
+```txt
+desafios/
+```
+
+If you change country IDs, saves can break. If you change team names, keep the names consistent in the database. Nothing fancy, just dont create two different spellings for the same team and then wonder why it broke. you can change anything, this are the easiest things to change but to change hardcoded rules and stuff you can just plug into an AI and ask for it it will probably nail first time, theres nothing that complicated in here anyway.
 
 ## Saves
 
-The app has an automatic save and also lets you download save files manually.
+The app has auto save and also lets you download save files.
 
-Manual saves are JSON files. Example saves can live in `Save/`.
+Manual saves are JSON files. Save before starting a new match if you care about the current one.
 
-Tip: download your save before starting a new game if you care about the current match.
-
-## Project structure
+## Project Structure
 
 ```txt
 fifa-world-domination.html  Main app shell
 game.js                    Core setup, state, language and screen logic
 js/                        Game modules
-styles/                    Split CSS files
+styles/                    CSS files
 teams.js                   Team database
 map-data.js                Country and territory data
 data/                      Map geometry
@@ -178,8 +186,14 @@ desafios/                  Challenge cards by language
 electron/                  Desktop wrapper
 ```
 
-## Notes
+## I want to make a site with this code and put ads on it can I?
+i dont care do what you want with it. but just know the font i used is from the eafc game so probably cant use it legally. if you use the code and put ads on it you will likely get sued. but honestly ea is a multi billion dollar company i dont think they really care about some random person using their font on a random website. also i dont care if you get sued. further more if you get sued and lose all your money. thats on you buddy. but if you make anything please, send me a photo of you sitting on the pile of cash and i will send you a video of me eating molded bread and drinking dirty water.
 
-This is a fan-made party tool for people who want to spice up FIFA/EA FC sessions. It is not affiliated with EA, FIFA, or any football league or club.
 
-Have fun with it, tweak it, break your friend group for one evening, then patch the rules and run it back.
+## Final Notes
+
+This is a fan-made party tool for people who want to make FIFA / EA FC sessions more dramatic than they should be.
+
+It is not affiliated with EA, FIFA, any league, club, confederation, your uncle, your local sunday league, or anyone else.
+
+Have fun, change the rules, argue for 20 minutes, make a save, patch the rules, and run it back.

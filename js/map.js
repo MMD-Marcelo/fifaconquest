@@ -30,6 +30,12 @@ const LABEL_POSITION_OVERRIDES = {
   US: [-98, 39]
 };
 
+const LABEL_TEXT_OFFSET_OVERRIDES = {
+  DO: [0, 1.5],
+  GF: [0, 3],
+  XK: [0, 0.8]
+};
+
 const MAJOR_LABEL_COUNTRIES = new Set([
   'BR','AR','US','CA','GL','MX','RU','CN','IN','AU','ZA','CD','DZ','SD','LY','EG',
   'SA','IR','KZ','ID','FR','DE','ES','GB','IT','TR','NG','ET','TZ','AO','KR','KP'
@@ -222,6 +228,12 @@ function setCountryLabelLines(textEl, id) {
     tspan.textContent = line;
     textEl.appendChild(tspan);
   });
+}
+
+function applyCountryLabelTextOffset(textEl, id) {
+  const offset = LABEL_TEXT_OFFSET_OVERRIDES[id];
+  if (!textEl || !offset) return;
+  textEl.setAttribute('transform', `translate(${offset[0]} ${offset[1]})`);
 }
 
 function geometryBounds(geometry) {
@@ -472,6 +484,7 @@ function createWorldSVG() {
     if (hasPort(gameId)) text.classList.add('has-port');
     text.setAttribute('data-id', gameId);
     setCountryLabelLines(text, gameId);
+    applyCountryLabelTextOffset(text, gameId);
     labelGroup.appendChild(text);
     mapLabelElements.push(text);
   });
