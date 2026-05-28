@@ -111,7 +111,13 @@ You can use random teams, the locked elite pool, or manually choose the team for
 
 ## Running The App
 
-The easiest way is just opening the HTML file.
+The easiest way is using the GitHub Pages version:
+
+https://mmd-marcelo.github.io/fifaconquest/
+
+If you want the Windows app, download the `.exe` from the GitHub release and run it.
+
+If you want to run it locally without installing anything:
 
 1. Download or clone the repo.
 2. Open `index.html` in a modern browser.
@@ -121,20 +127,18 @@ It is just HTML, CSS and JavaScript.
 
 Its very lazy and dumb, but it works.
 
-If you want the Electron version:
+If you want to run the Electron version yourself:
 
 ```bash
 npm install
 npm start
 ```
 
-If you want to build the Windows portable app:
+If you want to build the Windows portable app yourself:
 
 ```bash
 npm run build
 ```
-
-If there is a release build on GitHub, just download the `.exe`. That is easier if you dont want to mess with Node, npm, terminal stuff, all that.
 
 ## Editing Stuff
 
