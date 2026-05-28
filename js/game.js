@@ -395,11 +395,11 @@ const BASE_TEAM_MODES = {
 };
 
 const ELITE_LOCKED_LEAGUES = new Set([
-  'Premier League',
-  'La Liga',
-  'Bundesliga',
-  'Serie A',
-  'Ligue 1'
+  'English Premier League',
+  'Spanish Primera Division',
+  'German 1. Bundesliga',
+  'Italian Serie A',
+  'French Ligue 1'
 ]);
 
 const ELITE_LOCKED_TEAMS = [
@@ -408,16 +408,19 @@ const ELITE_LOCKED_TEAMS = [
   'Inter Miami CF',
   'Ajax', 'PSV', 'AZ Alkmaar', 'Feyenoord',
   'Al Nassr', 'Al Hilal', 'Al Ahli',
-  'FenerbahÃ§e', 'BeÅŸiktaÅŸ', 'Galatasaray', 'Trabzonspor',
+  'Fenerbahce', 'Besiktas', 'Galatasaray', 'Trabzonspor',
   'Anderlecht', 'Club Brugge', 'Antwerp',
   'Celtic', 'Rangers', 'Heart of Midlothian',
-  'FC KÃ¸benhavn', 'FC Midtjylland', 'BrÃ¸ndby IF',
-  'FerencvÃ¡rosi TC',
-  'Legia Warszawa', 'Lech PoznaÅ„', 'RakÃ³w CzÄ™stochowa',
-  'FCSB', 'CFR Cluj', 'Rapid BucureÈ™ti',
-  'MalmÃ¶ FF', 'AIK', 'Hammarby IF',
-  'BSC Young Boys', 'FC Basel', 'FC ZÃ¼rich',
-  'BodÃ¸/Glimt', 'Molde', 'Rosenborg'
+  'FC Kobenhavn', 'FC Midtjylland', 'Brondby IF',
+  'Ferencvarosi TC',
+  'Legia Warszawa', 'Lech Poznan', 'Rakow Czestochowa',
+  'FCSB', 'CFR Cluj', 'Rapid Bucuresti',
+  'Malmo FF', 'AIK', 'Hammarby IF',
+  'BSC Young Boys', 'FC Basel', 'FC Zurich',
+  'Bodo/Glimt', 'Molde', 'Rosenborg',
+  'Dinamo Zagreb', 'Hajduk Split',
+  'Olympiacos', 'Shakhtar Donetsk', 'Dynamo Kyiv', 'PAOK', 'Panathinaikos', 'AEK',
+  'Al Ain FC (UAE)', 'Slavia Praha', 'Viktoria Plzen', 'Qarabag FK', 'HJK Helsinki'
 ];
 
 const TEAM_POOL_MODE_LABELS = {

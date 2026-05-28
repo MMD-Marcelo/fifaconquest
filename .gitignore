@@ -7,6 +7,9 @@ Desktop.ini
 # Local save exports
 Save/*.json
 
+# Backup files
+data/teamsbackup.js
+
 # Electron
 node_modules/
 dist/
