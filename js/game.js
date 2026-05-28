@@ -57,8 +57,8 @@ let G = {
   revive: {}
 };
 
-const SAVE_KEY = 'fifaworld.save.v2';
-const LANG_KEY = 'fifaworld.lang';
+const SAVE_KEY = 'fifaconquest.save.v2';
+const LANG_KEY = 'fifaconquest.lang';
 let teamLabelsVisible = false;
 
 const LANGUAGE_FALLBACK = 'pt';

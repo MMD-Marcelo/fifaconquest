@@ -1,18 +1,18 @@
 {
-  "name": "fifa-world-domination",
+  "name": "fifa-conquest",
   "version": "1.0.0",
-  "description": "FIFA World Domination - Territory conquest game",
+  "description": "FIFA Conquest - Territory conquest game",
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
     "build": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win portable"
   },
   "build": {
-    "appId": "com.fifaworld.game",
-    "productName": "FIFA World Domination",
+    "appId": "com.fifaconquest.game",
+    "productName": "FIFA Conquest",
     "files": [
       "electron/**/*",
-      "fifa-world-domination.html",
+      "index.html",
       "styles/**/*",
       "assets/**/*",
       "js/**/*",

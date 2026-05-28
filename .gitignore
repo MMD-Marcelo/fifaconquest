@@ -4,7 +4,9 @@ Desktop.ini
 *.log
 *.tmp
 
+# Local save exports
+Save/*.json
+
 # Electron
 node_modules/
 dist/
-package-lock.json

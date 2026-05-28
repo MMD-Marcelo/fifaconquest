@@ -114,7 +114,7 @@ You can use random teams, the locked elite pool, or manually choose the team for
 The easiest way is just opening the HTML file.
 
 1. Download or clone the repo.
-2. Open `fifa-world-domination.html` in a modern browser.
+2. Open `index.html` in a modern browser.
 3. Play.
 
 It is just HTML, CSS and JavaScript.
@@ -176,7 +176,7 @@ Manual saves are JSON files. Save before starting a new match if you care about 
 ## Project Structure
 
 ```txt
-fifa-world-domination.html  Main app shell
+index.html                  Main app shell
 js/                        Game modules and core setup logic
 styles/                    CSS entrypoint and partials
 assets/                    Logos, icons and fonts

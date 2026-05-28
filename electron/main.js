@@ -7,14 +7,14 @@ function createWindow() {
     height: 900,
     minWidth: 900,
     minHeight: 600,
-    title: 'FIFA World Domination',
+    title: 'FIFA Conquest',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true
     }
   })
 
-  win.loadFile(path.join(__dirname, '..', 'fifa-world-domination.html'))
+  win.loadFile(path.join(__dirname, '..', 'index.html'))
 }
 
 app.whenReady().then(createWindow)
