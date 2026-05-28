@@ -2,13 +2,11 @@
   <img src="assets/logos/LOGO-LETTER.SVG" alt="FIFACONQUEST" width="520">
 </p>
 
-# FIFACONQUEST
-
-FIFACONQUEST is a companion app for a game mode that me and my friends have been playing for some time.
+FIFACONQUEST is a companion for a game mode that me and my friends have been playing for some time.
 
 If i remember correctly, one of my friends saw a FIFA youtube video where a guy was conquering a map. That video was also based on another guy doing something like this in an NFL or NBA game, i dont remember exactly. Then we started playing it, and as time went on we kept changing rules, adding stuff, removing stuff, and making it more of our own thing.
 
-This app is basically the board that keeps everything together. It was coded by AI with my assistance. I will not lie and say i coded everything myself like everyone that "vibecode" an app and suddenly acts like a software company. This is not for work, i dont intend on making money from it, and it is not some insane revolutionary thing either. Anyone could probably make something similar in a few hours if they really wanted to.
+This is basically the board that keeps everything together. It was coded by AI with my assistance. I will not lie and say i coded everything myself like everyone that "vibecode" something and suddenly acts like a software company. This is not for work, i dont intend on making money from it, and it is not some insane revolutionary thing either. Anyone could probably make something similar in a few hours if they really wanted to.
 
 It is just a fun thing for a very specific stupid game we like playing.
 
