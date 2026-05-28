@@ -16,7 +16,7 @@ You choose the number of players. The game works best with 4 people. 3 is cool a
 
 Each player gets a random country base. You can play with random teams, or manually choose your 3 teams that will be tied to your base. There is also an elite mode where the top 5 leagues are all in the map, and a random mode where it is basically any team from the database.
 
-The teams database was made using some freaky ass site, so there are probably things wrong there. Not every team is in the database. Some leagues may be outdated(i think the polish league has some teams that should be on fc26 but when we looked it up they were not there,so if that happens im sorry, but in our game we just picked another team from the same league that had similar overall rating and it was fine). Some league names may be weird. You can edit it pretty easily in the codebase. If you use mods, lets say a Brazilian league mod or something like that, you can add the teams in `teams.js` and it should work if you follow the same format.
+The teams database was made using some freaky ass site, so there are probably things wrong there. Not every team is in the database. Some leagues may be outdated(i think the polish league has some teams that should be on fc26 but when we looked it up they were not there,so if that happens im sorry, but in our game we just picked another team from the same league that had similar overall rating and it was fine). Some league names may be weird. You can edit it pretty easily in the codebase. If you use mods, lets say a Brazilian league mod or something like that, you can add the teams in `data/teams.js` and it should work if you follow the same format.
 
 ## How The World Conquest Works
 
@@ -141,13 +141,13 @@ Most things are data files.
 Teams are in:
 
 ```txt
-teams.js
+data/teams.js
 ```
 
 Countries and map rules are mostly in:
 
 ```txt
-map-data.js
+data/map-data.js
 data/world-geojson.js
 ```
 
@@ -175,12 +175,10 @@ Manual saves are JSON files. Save before starting a new match if you care about 
 
 ```txt
 fifa-world-domination.html  Main app shell
-game.js                    Core setup, state, language and screen logic
-js/                        Game modules
-styles/                    CSS files
-teams.js                   Team database
-map-data.js                Country and territory data
-data/                      Map geometry
+js/                        Game modules and core setup logic
+styles/                    CSS entrypoint and partials
+assets/                    Logos, icons and fonts
+data/                      Team database, territory data and map geometry
 lang/                      UI translations
 desafios/                  Challenge cards by language
 electron/                  Desktop wrapper

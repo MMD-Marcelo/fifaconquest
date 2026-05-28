@@ -1,7 +1,7 @@
 /* ===== FIFACONQUEST / EAFC-inspired visual layer ===== */
 @font-face {
   font-family: 'Cabin';
-  src: url('../Cabin/static/Cabin-Regular.ttf') format('truetype');
+  src: url('../assets/fonts/cabin/static/Cabin-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'Cabin';
-  src: url('../Cabin/static/Cabin-SemiBold.ttf') format('truetype');
+  src: url('../assets/fonts/cabin/static/Cabin-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -17,7 +17,7 @@
 
 @font-face {
   font-family: 'Cabin';
-  src: url('../Cabin/static/Cabin-Bold.ttf') format('truetype');
+  src: url('../assets/fonts/cabin/static/Cabin-Bold.ttf') format('truetype');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -25,7 +25,7 @@
 
 @font-face {
   font-family: 'Cabin Expanded';
-  src: url('../Cabin/static/Cabin_SemiCondensed-Bold.ttf') format('truetype');
+  src: url('../assets/fonts/cabin/static/Cabin_SemiCondensed-Bold.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -33,7 +33,7 @@
 
 @font-face {
   font-family: 'Cabin Condensed';
-  src: url('../Cabin/static/Cabin_Condensed-Bold.ttf') format('truetype');
+  src: url('../assets/fonts/cabin/static/Cabin_Condensed-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

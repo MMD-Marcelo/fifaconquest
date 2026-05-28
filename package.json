@@ -13,14 +13,8 @@
     "files": [
       "electron/**/*",
       "fifa-world-domination.html",
-      "game.js",
-      "styles.css",
       "styles/**/*",
-      "teams.js",
-      "map-data.js",
-      "LOGO-LETTER.SVG",
-      "chess-logo.svg",
-      "Cabin/**/*",
+      "assets/**/*",
       "js/**/*",
       "lang/**/*",
       "data/**/*",
@@ -28,7 +22,7 @@
     ],
     "win": {
       "target": "portable",
-      "icon": "favicon.ico"
+      "icon": "assets/icons/favicon.ico"
     }
   },
   "devDependencies": {
