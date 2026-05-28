@@ -216,6 +216,28 @@
   margin-bottom: 4px;
 }
 
+#map-tooltip .tt-base-team-list {
+  display: grid;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+#map-tooltip .tt-base-team {
+  display: grid;
+  gap: 1px;
+}
+
+#map-tooltip .tt-base-team span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#map-tooltip .tt-base-team small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
 #map-tooltip .tt-owner {
   font-size: 12px;
   color: var(--text2);

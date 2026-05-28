@@ -25,8 +25,10 @@ const LABEL_POSITION_OVERRIDES = {
   GF: [-53, 4],
   LK: [81, 7.5],
   NC: [165, -21],
+  NO: [9.4, 60.9],
   PR: [-66.5, 18.2],
   RU: [96, 61],
+  SE: [14.8, 62],
   US: [-98, 39]
 };
 
@@ -209,11 +211,33 @@ function geometryToPath(geometry) {
 }
 
 function getCountryLabelLines(id) {
-  const homeTeams = G.homeOf?.[id] ? (G.homeTeams?.[id] || []).filter(Boolean) : null;
-  if (homeTeams?.length) return homeTeams;
+  if (G.homeOf?.[id]) return [getHomeBaseLabel(id)];
   const terr = G.territories?.[id];
   const country = COUNTRY_BY_ID.get(id);
   return [terr?.team || country?.name || id];
+}
+
+function getHomeBaseLabel(id) {
+  const ownerId = G.homeOf?.[id];
+  const playerIndex = G.players.findIndex(pl => pl.id === ownerId);
+  const playerLabel = playerIndex >= 0 ? `P${playerIndex + 1}` : 'P?';
+  const remaining = (G.homeTeams?.[id] || []).filter(Boolean).length;
+  return `${playerLabel} ${remaining}/3`;
+}
+
+function getHomeBaseTooltipHtml(id) {
+  const teams = (G.homeTeams?.[id] || []).filter(Boolean);
+  if (!teams.length) return '';
+  const rows = teams.map(team => {
+    const league = TEAM_LEAGUE[team] || '';
+    return `
+      <div class="tt-base-team">
+        <span>${escapeHtml(team)}</span>
+        ${league ? `<small>${escapeHtml(league)}</small>` : ''}
+      </div>
+    `;
+  }).join('');
+  return `<div class="tt-base-team-list">${rows}</div>`;
 }
 
 function setCountryLabelLines(textEl, id) {
@@ -673,19 +697,20 @@ function showTooltip(e, id) {
   const country = COUNTRY_BY_ID.get(id);
   if (!terr || !country) return;
   document.getElementById('tt-country').textContent = country.name;
-  const ttTeamName = terr.team || '';
-  const ttLeagueName = TEAM_LEAGUE[ttTeamName] || '';
-  document.getElementById('tt-team').textContent = ttTeamName;
+  const isHome = !!G.homeOf[id];
+  const ttTeamName = isHome ? getHomeBaseLabel(id) : (terr.team || '');
+  const ttLeagueName = !isHome ? (TEAM_LEAGUE[ttTeamName] || '') : '';
+  const ttTeamEl = document.getElementById('tt-team');
+  ttTeamEl.textContent = ttTeamName;
   // Add/update league span
   let ttLeagueEl = document.getElementById('tt-league');
   if (!ttLeagueEl) {
     ttLeagueEl = document.createElement('div');
     ttLeagueEl.id = 'tt-league';
     ttLeagueEl.className = 'tt-league';
-    const ttTeamEl = document.getElementById('tt-team');
     ttTeamEl.parentNode.insertBefore(ttLeagueEl, ttTeamEl.nextSibling);
   }
-  ttLeagueEl.textContent = ttLeagueName;
+  ttLeagueEl.innerHTML = isHome ? getHomeBaseTooltipHtml(id) : escapeHtml(ttLeagueName);
   const ownerEl = document.getElementById('tt-owner');
   if (G.homeOf[id]) {
     const pl = G.players.find(p => p.id === G.homeOf[id]);
@@ -698,7 +723,7 @@ function showTooltip(e, id) {
   }
   if (G.homeOf[id]) {
     const homeId = id;
-    const lives = G.homeLives[homeId];
+    const lives = (G.homeTeams?.[homeId] || []).filter(Boolean).length;
     ownerEl.innerHTML += `<br><span style="color:var(--home-color)">${t('lives_left', { count: lives, plural: plural(lives) })}</span>`;
   }
   tt.style.display = 'block';
