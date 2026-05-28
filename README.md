@@ -16,7 +16,7 @@ You choose the number of players. The game works best with 4 people. 3 is cool a
 
 Each player gets a random country base. You can play with random teams, or manually choose your 3 teams that will be tied to your base. There is also an elite mode where the top 5 leagues are all in the map, and a random mode where it is basically any team from the database.
 
-The teams database was made using some freaky ass site, so there are probably things wrong there. Not every team is in the database. Some teams may be outdated. Some league names may be weird. You can change it pretty easily in the codebase. If you use mods, lets say a Brazilian league mod or something like that, you can add the teams in `teams.js` and it should work if you follow the same format.
+The teams database was made using some freaky ass site, so there are probably things wrong there. Not every team is in the database. Some leagues may be outdated(i think the polish league has some teams that should be on fc26 but when we looked it up they were not there,so if that happens im sorry, but in our game we just picked another team from the same league that had similar overall rating and it was fine). Some league names may be weird. You can edit it pretty easily in the codebase. If you use mods, lets say a Brazilian league mod or something like that, you can add the teams in `teams.js` and it should work if you follow the same format.
 
 ## How The World Conquest Works
 
@@ -36,7 +36,7 @@ You can make any FIFA rule you want:
 - normal match;
 - golden goal;
 - 3 goal difference ends the game;
-- whatever cursed thing your group enjoys.
+- whatever your friend group enjoys.
 
 If the attacker wins, they take the territory.
 
@@ -67,7 +67,7 @@ This is just how we do it. Most of the rules in here are just things we found ou
 
 There is also a pass turn button. So if your group does not like one guy winning forever, you can make a rule that forces turns to pass.
 
-One PUSSY ass rule is: in the first 3 turns, each player can only attack once, then must pass even if they win. I personally think this is weak, but do whatever makes your friends not cry.
+One PUSSY ass rule is: in the first 3 turns, each player can only attack once, then must pass the turn even if they win. I personally think this is weak, but do whatever makes your friends not cry.
 
 ## Challenge Cards
 
@@ -187,13 +187,13 @@ electron/                  Desktop wrapper
 ```
 
 ## I want to make a site with this code and put ads on it can I?
-i dont care do what you want with it. but just know the font i used is from the eafc game so probably cant use it legally. if you use the code and put ads on it you will likely get sued. but honestly ea is a multi billion dollar company i dont think they really care about some random person using their font on a random website. also i dont care if you get sued. further more if you get sued and lose all your money. thats on you buddy. but if you make anything please, send me a photo of you sitting on the pile of cash and i will send you a video of me eating molded bread and drinking dirty water.
+i dont care, do whatever you want with it. but keep in mind that if you get into any legal trouble i also dont care, and i will not help you with anything, I do hope for you succes but also i wouldnt not want to see you fail lol, but if you make any type of money off of this please, send me a pics or video of you sitting on the pile of cash and i will send you a video of me eating molded bread and drinking dirty water.
 
 
 ## Final Notes
 
-This is a fan-made party tool for people who want to make FIFA / EA FC sessions more dramatic than they should be.
+This is a fan-made party tool for people who want to make FIFA / EA FC sessions more dramatic and longer than they should be.
 
-It is not affiliated with EA, FIFA, any league, club, confederation, your uncle, your local sunday league, or anyone else.
+It is not affiliated with EA, FIFA, any league, club, confederation or anyone else.
 
-Have fun, change the rules, argue for 20 minutes, make a save, patch the rules, and run it back.
+Have fun, change the rules, argue, make a save, cry, patch the rules, and run it back.
