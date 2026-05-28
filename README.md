@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logos/LOGO-LETTER.SVG" alt="FIFACONQUEST" width="520">
+</p>
+
 # FIFACONQUEST
 
 FIFACONQUEST is a companion app for a game mode that me and my friends have been playing for some time.
